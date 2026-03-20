@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tamime Kaddour — Creative Director</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#28282d;
+  --bg2:#1f1f23;
+  --text:#f6e6d1;
+  --green:#1aa37a;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Lexend',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  z-index:1000;
+  transition:.4s;
+}
+
+nav.scrolled{
+  backdrop-filter: blur(10px);
+  background: rgba(31,31,35,.6);
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero h1{
+  font-size:clamp(40px,6vw,90px);
+  letter-spacing:.05em;
+}
+
+/* PROJECT GRID */
+.projects{
+  padding:100px 40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.project-card{
+  position:relative;
+  overflow:hidden;
+  aspect-ratio:4/3;
+  cursor:pointer;
+}
+
+.project-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:.6s cubic-bezier(.22,1,.36,1);
+}
+
+.project-card:hover img{
+  transform:scale(1.1);
+}
+
+.project-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  transition:.4s;
+}
+
+.project-card:hover .project-overlay{
+  opacity:1;
+}
+
+.project-overlay span{
+  border:1px solid var(--text);
+  padding:10px 20px;
+  font-size:12px;
+}
+
+/* SKILLS */
+.skills{
+  padding:100px 40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.skill{
+  background:var(--bg2);
+  padding:40px;
+  text-align:center;
+}
+
+/* CTA */
+.cta{
+  text-align:center;
+  padding:120px 20px;
+}
+
+.cta a{
+  border:1px solid var(--text);
+  padding:15px 40px;
+  text-decoration:none;
+  color:var(--text);
+}
+
+/* FOOTER */
+footer{
+  padding:40px;
+  text-align:center;
+  opacity:.6;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .projects{
+    grid-template-columns:1fr;
+  }
+  .skills{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav id="nav">
+  <div>TAMIME</div>
+  <div>Portfolio</div>
+</nav>
+
+<section class="hero" id="hero">
+  <h1>Tamime Kaddour</h1>
+</section>
+
+<section class="projects">
+
+<a href="projects.html" class="project-card">
+  <img src="project-02.jpg">
+  <div class="project-overlay"><span>View Project</span></div>
+</a>
+
+<a href="projects.html" class="project-card">
+  <img src="project-03.jpg">
+  <div class="project-overlay"><span>View Project</span></div>
+</a>
+
+<a href="projects.html" class="project-card">
+  <img src="project-04.jpg">
+  <div class="project-overlay"><span>View Project</span></div>
+</a>
+
+<a href="projects.html" class="project-card">
+  <img src="project-05.jpg">
+  <div class="project-overlay"><span>View Project</span></div>
+</a>
+
+<a href="projects.html" class="project-card">
+  <img src="project-06.jpg">
+  <div class="project-overlay"><span>View Project</span></div>
+</a>
+
+</section>
+
+<section class="skills">
+  <div class="skill">
+    <h3>Branding</h3>
+    <p>Identity & systems</p>
+  </div>
+  <div class="skill">
+    <h3>Motion</h3>
+    <p>Animation & storytelling</p>
+  </div>
+  <div class="skill">
+    <h3>3D</h3>
+    <p>Visual rendering</p>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Let’s build something bold</h2>
+  <br>
+  <a href="#">Start a Project</a>
+</section>
+
+<footer>
+© 2026 — Tamime Kaddour
+</footer>
+
+<script>
+/* NAV SCROLL */
+const nav = document.getElementById("nav");
+let last = 0;
+
+window.addEventListener("scroll", () => {
+  let current = window.scrollY;
+
+  if(current > 50){
+    nav.classList.add("scrolled");
+  } else {
+    nav.classList.remove("scrolled");
+  }
+
+  if(current > last && current > 200){
+    nav.style.transform="translateY(-100%)";
+  } else {
+    nav.style.transform="translateY(0)";
+  }
+
+  last = current;
+});
+
+/* HERO PARALLAX */
+const hero = document.getElementById("hero");
+
+hero.addEventListener("mousemove", e => {
+  const x = (e.clientX/window.innerWidth - .5)*20;
+  const y = (e.clientY/window.innerHeight - .5)*20;
+
+  hero.style.transform = `translate(${x}px, ${y}px)`;
+});
+</script>
+
+</body>
+</html>
