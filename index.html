@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tamime Kaddour — Creative Director</title>
+<title>Tamime Kaddour</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -16,11 +16,7 @@
   --green:#1aa37a;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
   font-family:'Lexend',sans-serif;
@@ -31,7 +27,6 @@ body{
 /* NAV */
 nav{
   position:fixed;
-  top:0;
   width:100%;
   padding:20px 40px;
   display:flex;
@@ -41,91 +36,102 @@ nav{
 }
 
 nav.scrolled{
-  backdrop-filter: blur(10px);
-  background: rgba(31,31,35,.6);
+  backdrop-filter:blur(10px);
+  background:rgba(31,31,35,.7);
 }
 
 /* HERO */
 .hero{
   height:100vh;
   display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  align-items:flex-end;
+  padding:60px;
 }
 
 .hero h1{
-  font-size:clamp(40px,6vw,90px);
-  letter-spacing:.05em;
+  font-size:clamp(50px,7vw,110px);
+  line-height:.9;
 }
 
-/* PROJECT GRID */
+.hero span{
+  color:var(--green);
+}
+
+/* PROJECTS */
 .projects{
-  padding:100px 40px;
+  padding:120px 40px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:20px;
 }
 
-.project-card{
+.card{
   position:relative;
   overflow:hidden;
   aspect-ratio:4/3;
-  cursor:pointer;
 }
 
-.project-card img{
+.card img{
   width:100%;
   height:100%;
   object-fit:cover;
-  transition:.6s cubic-bezier(.22,1,.36,1);
+  transition:.7s cubic-bezier(.22,1,.36,1);
 }
 
-.project-card:hover img{
+.card:hover img{
   transform:scale(1.1);
 }
 
-.project-overlay{
+.card::after{
+  content:"";
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.4);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
   opacity:0;
   transition:.4s;
 }
 
-.project-card:hover .project-overlay{
+.card:hover::after{
   opacity:1;
 }
 
-.project-overlay span{
-  border:1px solid var(--text);
-  padding:10px 20px;
-  font-size:12px;
+.card-content{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.4s;
 }
 
-/* SKILLS */
-.skills{
-  padding:100px 40px;
+.card:hover .card-content{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ABOUT */
+.about{
+  padding:120px 40px;
+  max-width:800px;
+}
+
+/* CAPABILITIES */
+.capabilities{
+  padding:120px 40px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:10px;
 }
 
-.skill{
+.cap{
   background:var(--bg2);
   padding:40px;
-  text-align:center;
 }
 
 /* CTA */
 .cta{
   text-align:center;
-  padding:120px 20px;
+  padding:140px 20px;
 }
 
 .cta a{
@@ -133,23 +139,25 @@ nav.scrolled{
   padding:15px 40px;
   text-decoration:none;
   color:var(--text);
+  transition:.3s;
+}
+
+.cta a:hover{
+  background:var(--text);
+  color:var(--bg);
 }
 
 /* FOOTER */
 footer{
   padding:40px;
   text-align:center;
-  opacity:.6;
+  opacity:.5;
 }
 
 /* MOBILE */
 @media(max-width:900px){
-  .projects{
-    grid-template-columns:1fr;
-  }
-  .skills{
-    grid-template-columns:1fr;
-  }
+  .projects{grid-template-columns:1fr;}
+  .capabilities{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -161,66 +169,65 @@ footer{
   <div>Portfolio</div>
 </nav>
 
-<section class="hero" id="hero">
-  <h1>Tamime Kaddour</h1>
+<section class="hero">
+  <h1>
+    Creative<br>
+    <span>Direction</span><br>
+    & Design
+  </h1>
 </section>
 
 <section class="projects">
 
-<a href="projects.html" class="project-card">
+<a href="projects.html" class="card">
   <img src="project-02.jpg">
-  <div class="project-overlay"><span>View Project</span></div>
+  <div class="card-content">Project</div>
 </a>
 
-<a href="projects.html" class="project-card">
+<a href="projects.html" class="card">
   <img src="project-03.jpg">
-  <div class="project-overlay"><span>View Project</span></div>
+  <div class="card-content">Project</div>
 </a>
 
-<a href="projects.html" class="project-card">
+<a href="projects.html" class="card">
   <img src="project-04.jpg">
-  <div class="project-overlay"><span>View Project</span></div>
+  <div class="card-content">Project</div>
 </a>
 
-<a href="projects.html" class="project-card">
+<a href="projects.html" class="card">
   <img src="project-05.jpg">
-  <div class="project-overlay"><span>View Project</span></div>
+  <div class="card-content">Project</div>
 </a>
 
-<a href="projects.html" class="project-card">
+<a href="projects.html" class="card">
   <img src="project-06.jpg">
-  <div class="project-overlay"><span>View Project</span></div>
+  <div class="card-content">Project</div>
 </a>
 
 </section>
 
-<section class="skills">
-  <div class="skill">
-    <h3>Branding</h3>
-    <p>Identity & systems</p>
-  </div>
-  <div class="skill">
-    <h3>Motion</h3>
-    <p>Animation & storytelling</p>
-  </div>
-  <div class="skill">
-    <h3>3D</h3>
-    <p>Visual rendering</p>
-  </div>
+<section class="about">
+  <p>
+  I design visual systems and digital experiences that combine clarity, impact and storytelling.
+  </p>
+</section>
+
+<section class="capabilities">
+  <div class="cap">Branding</div>
+  <div class="cap">Motion</div>
+  <div class="cap">3D</div>
 </section>
 
 <section class="cta">
-  <h2>Let’s build something bold</h2>
-  <br>
+  <h2>Let’s build something bold</h2><br>
   <a href="#">Start a Project</a>
 </section>
 
 <footer>
-© 2026 — Tamime Kaddour
+© 2026 Tamime Kaddour
 </footer>
 
 <script>
-/* NAV SCROLL */
 const nav = document.getElementById("nav");
 let last = 0;
 
@@ -240,16 +247,6 @@ window.addEventListener("scroll", () => {
   }
 
   last = current;
-});
-
-/* HERO PARALLAX */
-const hero = document.getElementById("hero");
-
-hero.addEventListener("mousemove", e => {
-  const x = (e.clientX/window.innerWidth - .5)*20;
-  const y = (e.clientY/window.innerHeight - .5)*20;
-
-  hero.style.transform = `translate(${x}px, ${y}px)`;
 });
 </script>
 
