@@ -3,252 +3,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamime — Creative Direction</title>
 
-<title>Tamime Kaddour</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#28282d;
-  --bg2:#1f1f23;
-  --text:#f6e6d1;
-  --green:#1aa37a;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'Lexend',sans-serif;
-  background:var(--bg);
-  color:var(--text);
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0d0f14;
+  color: #eaeaea;
+  overflow-x: hidden;
 }
 
 /* NAV */
-nav{
-  position:fixed;
-  width:100%;
-  padding:20px 40px;
-  display:flex;
-  justify-content:space-between;
-  z-index:1000;
-  transition:.4s;
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 60px;
 }
 
-nav.scrolled{
-  backdrop-filter:blur(10px);
-  background:rgba(31,31,35,.7);
+nav img {
+  width: 40px;
+}
+
+nav a {
+  font-size: 14px;
+  opacity: 0.7;
 }
 
 /* HERO */
-.hero{
-  height:100vh;
-  display:flex;
-  align-items:flex-end;
-  padding:60px;
+
+.hero {
+  position: relative;
+  padding: 120px 60px;
+  max-width: 1200px;
 }
 
-.hero h1{
-  font-size:clamp(50px,7vw,110px);
-  line-height:.9;
+.hero h1 {
+  font-size: 82px;
+  line-height: 1.05;
+  font-weight: 800;
 }
 
-.hero span{
-  color:var(--green);
+.accent {
+  color: #22c58b;
 }
 
-/* PROJECTS */
-.projects{
-  padding:120px 40px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:20px;
+.hero p {
+  margin-top: 30px;
+  max-width: 500px;
+  color: #888;
+  font-size: 16px;
 }
 
-.card{
-  position:relative;
-  overflow:hidden;
-  aspect-ratio:4/3;
+/* FLOATING IMAGE */
+
+.hero-visual {
+  position: absolute;
+  right: 60px;
+  top: 120px;
+  width: 300px;
+  transform: rotate(-6deg);
+  opacity: 0.8;
 }
 
-.card img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:.7s cubic-bezier(.22,1,.36,1);
+/* GRID */
+
+.grid {
+  padding: 100px 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
 }
 
-.card:hover img{
-  transform:scale(1.1);
+.card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
-  opacity:0;
-  transition:.4s;
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.6s;
 }
 
-.card:hover::after{
-  opacity:1;
+.card:hover img {
+  transform: scale(1.08);
+  opacity: 0.6;
 }
 
-.card-content{
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  opacity:0;
-  transform:translateY(20px);
-  transition:.4s;
+.card span {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
 }
 
-.card:hover .card-content{
-  opacity:1;
-  transform:translateY(0);
+/* BIG FEATURE */
+
+.feature {
+  padding: 140px 60px;
+  display: flex;
+  gap: 80px;
+  align-items: center;
 }
 
-/* ABOUT */
-.about{
-  padding:120px 40px;
-  max-width:800px;
+.feature img {
+  width: 50%;
 }
 
-/* CAPABILITIES */
-.capabilities{
-  padding:120px 40px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
+.feature-text {
+  max-width: 400px;
 }
 
-.cap{
-  background:var(--bg2);
-  padding:40px;
+.feature-text h2 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.feature-text p {
+  color: #888;
+}
+
+/* SERVICES */
+
+.services {
+  padding: 120px 60px;
+}
+
+.services h3 {
+  font-size: 28px;
+  margin-bottom: 40px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.service {
+  padding: 40px;
+  border: 1px solid #1e1e1e;
+  transition: 0.3s;
+}
+
+.service:hover {
+  border-color: #22c58b;
+  transform: translateY(-5px);
 }
 
 /* CTA */
-.cta{
-  text-align:center;
-  padding:140px 20px;
+
+.cta {
+  padding: 160px 20px;
+  text-align: center;
 }
 
-.cta a{
-  border:1px solid var(--text);
-  padding:15px 40px;
-  text-decoration:none;
-  color:var(--text);
-  transition:.3s;
+.cta h2 {
+  font-size: 40px;
+  margin-bottom: 20px;
 }
 
-.cta a:hover{
-  background:var(--text);
-  color:var(--bg);
+.cta a {
+  padding: 14px 30px;
+  border: 1px solid #fff;
+  transition: 0.3s;
+}
+
+.cta a:hover {
+  background: #22c58b;
+  color: #000;
+  border-color: #22c58b;
 }
 
 /* FOOTER */
-footer{
-  padding:40px;
-  text-align:center;
-  opacity:.5;
+
+footer {
+  text-align: center;
+  padding: 40px;
+  font-size: 12px;
+  color: #555;
 }
 
-/* MOBILE */
-@media(max-width:900px){
-  .projects{grid-template-columns:1fr;}
-  .capabilities{grid-template-columns:1fr;}
+/* RESPONSIVE */
+
+@media(max-width: 900px) {
+
+  .hero h1 {
+    font-size: 52px;
+  }
+
+  .hero-visual {
+    display: none;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature {
+    flex-direction: column;
+  }
+
+  .feature img {
+    width: 100%;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<nav id="nav">
-  <div>TAMIME</div>
-  <div>Portfolio</div>
+<nav>
+  <img src="logo.svg">
+  <a href="projects.html">Portfolio</a>
 </nav>
 
 <section class="hero">
   <h1>
-    Creative<br>
-    <span>Direction</span><br>
+    Creative <br>
+    <span class="accent">Direction</span> <br>
     & Design
   </h1>
-</section>
 
-<section class="projects">
-
-<a href="projects.html" class="card">
-  <img src="project-02.jpg">
-  <div class="card-content">Project</div>
-</a>
-
-<a href="projects.html" class="card">
-  <img src="project-03.jpg">
-  <div class="card-content">Project</div>
-</a>
-
-<a href="projects.html" class="card">
-  <img src="project-04.jpg">
-  <div class="card-content">Project</div>
-</a>
-
-<a href="projects.html" class="card">
-  <img src="project-05.jpg">
-  <div class="card-content">Project</div>
-</a>
-
-<a href="projects.html" class="card">
-  <img src="project-06.jpg">
-  <div class="card-content">Project</div>
-</a>
-
-</section>
-
-<section class="about">
   <p>
-  I design visual systems and digital experiences that combine clarity, impact and storytelling.
+    I turn visual thinking into clear, bold digital experiences that resonate.
   </p>
+
+  <img src="photo.jpg" class="hero-visual">
 </section>
 
-<section class="capabilities">
-  <div class="cap">Branding</div>
-  <div class="cap">Motion</div>
-  <div class="cap">3D</div>
+<section class="grid">
+
+  <div class="card">
+    <img src="photo.jpg">
+    <span>Brand Identity</span>
+  </div>
+
+  <div class="card">
+    <img src="photo2.jpg">
+    <span>3D Exploration</span>
+  </div>
+
+  <div class="card">
+    <img src="project-02.jpg">
+    <span>Digital Campaign</span>
+  </div>
+
+  <div class="card">
+    <img src="project-03.jpg">
+    <span>Art Direction</span>
+  </div>
+
+  <div class="card">
+    <img src="project-04.jpg">
+    <span>Typography</span>
+  </div>
+
+  <div class="card">
+    <img src="project-05.jpg">
+    <span>Motion</span>
+  </div>
+
+</section>
+
+<section class="feature">
+
+  <img src="project-06.jpg">
+
+  <div class="feature-text">
+    <h2>Design that speaks before words</h2>
+    <p>
+      Every project is built to carry meaning, not just aesthetics.
+      Strategy, storytelling and execution aligned into one clear vision.
+    </p>
+  </div>
+
+</section>
+
+<section class="services">
+
+  <h3>What I do</h3>
+
+  <div class="service-grid">
+    <div class="service">Branding</div>
+    <div class="service">Motion Design</div>
+    <div class="service">3D & Visual Systems</div>
+  </div>
+
 </section>
 
 <section class="cta">
-  <h2>Let’s build something bold</h2><br>
-  <a href="#">Start a Project</a>
+  <h2>Let’s build something bold</h2>
+  <a href="#">Start a project</a>
 </section>
 
 <footer>
-© 2026 Tamime Kaddour
+  © 2026 Tamime Kaddour
 </footer>
-
-<script>
-const nav = document.getElementById("nav");
-let last = 0;
-
-window.addEventListener("scroll", () => {
-  let current = window.scrollY;
-
-  if(current > 50){
-    nav.classList.add("scrolled");
-  } else {
-    nav.classList.remove("scrolled");
-  }
-
-  if(current > last && current > 200){
-    nav.style.transform="translateY(-100%)";
-  } else {
-    nav.style.transform="translateY(0)";
-  }
-
-  last = current;
-});
-</script>
 
 </body>
 </html>
