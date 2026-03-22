@@ -11,6 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
+    /* ═══════════════════════════════════════════
+       RESET + ROOT
+    ═══════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -22,56 +25,88 @@
       --text:       #f6e6d1;
       --muted:      rgba(246,230,209,0.42);
       --border:     rgba(26,163,122,0.18);
+
+      /* ── timing system */
+      --ease:   cubic-bezier(.22,1,.36,1);
+      --t-fast: 200ms;
+      --t-std:  400ms;
+      --t-slow: 700ms;
     }
 
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: 'Lexend', sans-serif;
-      overflow-x: hidden;
-      cursor: none;
+      overflow-x: hidden; cursor: none;
     }
 
-    /* ────────────────────────────── CURSOR */
-    #cursor {
-      position: fixed; width: 8px; height: 8px;
+    /* ═══════════════════════════════════════════
+       CURSOR — contextual, trailing ring
+    ═══════════════════════════════════════════ */
+    #cursor-dot {
+      position: fixed; width: 6px; height: 6px;
       background: var(--green-mid); border-radius: 50%;
       pointer-events: none; z-index: 9999;
       transform: translate(-50%,-50%);
-      transition: width .2s, height .2s, background .2s;
+      transition: width var(--t-fast) var(--ease),
+                  height var(--t-fast) var(--ease),
+                  background var(--t-fast) var(--ease);
     }
-    #cursor.large {
-      width: 44px; height: 44px; background: transparent;
-      border: 1px solid rgba(26,163,122,0.55);
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid rgba(26,163,122,.45); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: width var(--t-std) var(--ease),
+                  height var(--t-std) var(--ease),
+                  border-color var(--t-std) var(--ease),
+                  opacity var(--t-std) var(--ease);
+    }
+    #cursor-label {
+      position: fixed; z-index: 9997;
+      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 8.5px;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--text);
+      pointer-events: none; white-space: nowrap;
+      transform: translate(16px, -50%);
+      opacity: 0; transition: opacity var(--t-fast) var(--ease);
+    }
+    #cursor-label.visible { opacity: 1; }
+    body:has(.project-card:hover) #cursor-ring {
+      width: 56px; height: 56px;
+      border-color: rgba(26,163,122,.65);
     }
 
-    /* ────────────────────────────── NAV */
+    /* ═══════════════════════════════════════════
+       NAV — progressive scroll + hide/show
+    ═══════════════════════════════════════════ */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: space-between; align-items: center;
       padding: 22px 52px;
-      background: linear-gradient(to bottom, rgba(40,40,45,.96) 0%, rgba(40,40,45,0) 100%);
-      transition: background .4s ease, backdrop-filter .4s ease, padding .3s ease;
-    }
-    nav.scrolled {
-      background: rgba(31,31,35,.94);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      padding-top: 14px;
-      padding-bottom: 14px;
+      background: transparent;
+      transition: transform var(--t-std) var(--ease),
+                  padding var(--t-std) var(--ease);
+      will-change: transform;
     }
     .nav-logo { display: flex; align-items: center; text-decoration: none; }
-    .nav-logo img { height: 46px; width: auto; opacity: .88; transition: opacity .3s; }
+    .nav-logo img { height: 46px; width: auto; opacity: .88; transition: opacity var(--t-std); }
     .nav-logo:hover img { opacity: 1; }
+
     .nav-links { display: flex; gap: 40px; list-style: none; }
     .nav-links a {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10.5px;
       letter-spacing: .18em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none; transition: color .3s;
+      color: var(--muted); text-decoration: none;
+      position: relative; transition: color var(--t-std);
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 100%;
+      height: 1px; background: var(--green-mid);
+      transition: right var(--t-std) var(--ease);
     }
     .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { right: 0; }
+
     .nav-cta { display: flex; align-items: center; gap: 16px; }
     .nav-open {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
@@ -85,13 +120,12 @@
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    /* ── LANG TOGGLE */
     .lang-toggle {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
       letter-spacing: .18em; text-transform: uppercase;
       color: var(--muted); background: none;
       border: 1px solid rgba(246,230,209,.15);
-      padding: 8px 14px; cursor: none; transition: all .3s;
+      padding: 8px 14px; cursor: none; transition: all var(--t-std);
     }
     .lang-toggle:hover { color: var(--green-mid); border-color: rgba(26,163,122,.4); }
 
@@ -99,78 +133,81 @@
       font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 10px;
       letter-spacing: .18em; text-transform: uppercase; color: var(--text);
       border: 1px solid rgba(246,230,209,.28); padding: 10px 24px;
-      text-decoration: none; transition: all .3s; background: transparent;
+      text-decoration: none; position: relative; overflow: hidden;
+      transition: color var(--t-std) var(--ease), border-color var(--t-std);
+      background: transparent;
     }
-    .btn-nav:hover { background: var(--text); color: var(--bg); }
+    .btn-nav::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--text); transform: scaleX(0); transform-origin: left;
+      transition: transform var(--t-std) var(--ease); z-index: -1;
+    }
+    .btn-nav:hover { color: var(--bg); border-color: var(--text); }
+    .btn-nav:hover::before { transform: scaleX(1); }
 
     /* ── HAMBURGER */
     .hamburger {
-      display: none;
-      flex-direction: column; gap: 5px;
-      background: none; border: none; cursor: none;
-      padding: 6px 4px; z-index: 201;
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: none; padding: 6px 4px; z-index: 201;
     }
     .hamburger span {
       display: block; width: 22px; height: 1.5px;
-      background: var(--text); transition: all .35s ease;
+      background: var(--text); transition: all var(--t-std) var(--ease);
       transform-origin: center;
     }
 
-    /* ────────────────────────────── MOBILE OVERLAY */
+    /* ═══════════════════════════════════════════
+       MOBILE OVERLAY
+    ═══════════════════════════════════════════ */
     .mobile-overlay {
       position: fixed; inset: 0; z-index: 300;
       background: var(--bg2);
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 40px 24px;
+      align-items: center; justify-content: center; padding: 40px 24px;
       opacity: 0; pointer-events: none;
-      transition: opacity .4s ease;
+      transition: opacity var(--t-std) var(--ease);
     }
     .mobile-overlay.open { opacity: 1; pointer-events: all; }
-
     .mobile-nav-close {
       position: absolute; top: 22px; right: 24px;
       background: none; border: none; cursor: none;
       width: 40px; height: 40px;
       display: flex; align-items: center; justify-content: center;
     }
-    .mobile-nav-close::before,
-    .mobile-nav-close::after {
-      content: ''; position: absolute;
-      width: 20px; height: 1.5px; background: var(--text);
+    .mobile-nav-close::before, .mobile-nav-close::after {
+      content: ''; position: absolute; width: 20px; height: 1.5px; background: var(--text);
     }
     .mobile-nav-close::before { transform: rotate(45deg); }
     .mobile-nav-close::after  { transform: rotate(-45deg); }
-
     .mobile-links { list-style: none; text-align: center; margin-bottom: 48px; }
     .mobile-links li { margin-bottom: 20px; }
     .mobile-links a {
       font-family: 'Lexend', sans-serif; font-weight: 700;
       font-size: clamp(30px, 10vw, 50px); line-height: 1;
       letter-spacing: -.02em; text-transform: uppercase;
-      color: var(--text); text-decoration: none; transition: color .2s;
+      color: var(--text); text-decoration: none; transition: color var(--t-fast);
     }
     .mobile-links a:hover { color: var(--green-mid); }
-
     .mobile-cta {
       font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 9.5px;
       letter-spacing: .2em; text-transform: uppercase; color: var(--text);
       background: var(--green-deep); border: 1px solid var(--green-deep);
-      padding: 15px 32px; text-decoration: none; transition: all .3s;
+      padding: 15px 32px; text-decoration: none; transition: all var(--t-std);
       margin-bottom: 20px;
     }
     .mobile-cta:hover { background: var(--green-mid); }
-
     .mobile-lang-toggle {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
       letter-spacing: .24em; text-transform: uppercase;
       color: var(--muted); background: none;
       border: 1px solid rgba(246,230,209,.15);
-      padding: 10px 24px; cursor: none; transition: all .3s;
+      padding: 10px 24px; cursor: none; transition: all var(--t-std);
     }
     .mobile-lang-toggle:hover { color: var(--green-mid); border-color: rgba(26,163,122,.4); }
 
-    /* ────────────────────────────── HERO */
+    /* ═══════════════════════════════════════════
+       HERO — grain + parallax + name animation
+    ═══════════════════════════════════════════ */
     #hero {
       position: relative; width: 100%; height: 100vh; min-height: 700px;
       overflow: hidden; cursor: none;
@@ -178,25 +215,33 @@
     .hero-blur {
       position: absolute; inset: 0;
       background-image: url('photo.jpg'); background-size: cover; background-position: center 20%;
-      filter: blur(18px) brightness(.5) saturate(.65); transform: scale(1.08); z-index: 1;
+      filter: blur(18px) brightness(.5) saturate(.65); transform: scale(1.12);
+      z-index: 1; will-change: transform; transition: transform .05s linear;
     }
     .hero-overlay {
       position: absolute; inset: 0;
       background:
         radial-gradient(ellipse 85% 60% at 50% 100%, rgba(0,0,0,.78) 0%, transparent 70%),
         linear-gradient(to bottom, rgba(40,40,45,.28) 0%, rgba(40,40,45,.04) 35%, rgba(40,40,45,.72) 100%);
-      z-index: 2;
+      z-index: 2; will-change: transform; transition: transform .05s linear;
     }
     .hero-sharp {
       position: absolute; inset: 0;
       background-image: url('photo.jpg'); background-size: cover; background-position: center 20%;
       z-index: 3; clip-path: inset(50% 50% 50% 50%); will-change: clip-path;
     }
+    /* grain overlay */
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 5; pointer-events: none;
+      opacity: .038; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
     .hero-frame {
       position: absolute; width: 340px; height: 420px;
       border: 1px solid rgba(246,230,209,.5);
       pointer-events: none; z-index: 4;
-      transform: translate(-50%,-50%); opacity: 0; transition: opacity .4s ease;
+      transform: translate(-50%,-50%); opacity: 0; transition: opacity var(--t-std) var(--ease);
     }
     .hero-frame.visible { opacity: 1; }
     .hero-frame::before, .hero-frame::after {
@@ -206,7 +251,7 @@
     .hero-frame::after  { width: 1px; height: 14px; transform: translate(-50%,-50%); }
 
     .hero-tags {
-      position: absolute; top: 40%; left: 0; right: 0; z-index: 5;
+      position: absolute; top: 40%; left: 0; right: 0; z-index: 6;
       display: flex; justify-content: space-around; align-items: center;
       padding: 0 80px; pointer-events: none;
     }
@@ -214,31 +259,39 @@
       font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 10.5px;
       letter-spacing: .28em; text-transform: uppercase; color: rgba(246,230,209,.42);
     }
-
     .hero-bottom {
       position: absolute; bottom: 0; left: 0; right: 0;
-      z-index: 5; padding: 0 52px 52px;
+      z-index: 6; padding: 0 52px 52px;
     }
     .hero-name {
       display: block;
       font-family: 'Lexend', sans-serif; font-weight: 800;
       font-size: clamp(64px, 9.8vw, 148px);
       line-height: .88; letter-spacing: -.03em; text-transform: uppercase;
-      color: var(--text);
-      text-shadow: 0 4px 48px rgba(0,0,0,.5);
+      color: var(--text); text-shadow: 0 4px 48px rgba(0,0,0,.5);
       white-space: nowrap;
+      animation: nameReveal var(--t-slow) var(--ease) .3s both;
+    }
+    @keyframes nameReveal {
+      from { opacity: 0; letter-spacing: .08em; transform: translateY(24px); }
+      to   { opacity: 1; letter-spacing: -.03em; transform: translateY(0); }
     }
     .hero-role {
       display: block;
       font-family: 'Lexend', sans-serif; font-weight: 300;
       font-size: clamp(10px, .95vw, 14px);
       letter-spacing: .52em; text-transform: uppercase;
-      color: var(--green-mid);
-      white-space: nowrap;
-      margin-top: 10px;
+      color: var(--green-mid); white-space: nowrap; margin-top: 10px;
+      animation: fadeUp var(--t-slow) var(--ease) .6s both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ────────────────────────────── MARQUEE */
+    /* ═══════════════════════════════════════════
+       MARQUEE
+    ═══════════════════════════════════════════ */
     .marquee-strip {
       background: var(--bg2); border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border); overflow: hidden; position: relative; z-index: 10;
@@ -252,7 +305,7 @@
     .marquee-item {
       display: flex; align-items: center; gap: 14px;
       padding: 22px 48px; border-right: 1px solid var(--border); flex-shrink: 0;
-      transition: background .25s;
+      transition: background var(--t-std);
     }
     .marquee-item:hover { background: rgba(26,163,122,.04); }
     .marquee-item svg { width: 30px; height: 30px; flex-shrink: 0; }
@@ -262,9 +315,10 @@
       color: rgba(246,230,209,.32); white-space: nowrap;
     }
 
-    /* ────────────────────────────── SECTION SHARED */
+    /* ═══════════════════════════════════════════
+       SECTION SHARED
+    ═══════════════════════════════════════════ */
     section { padding: 120px 52px; position: relative; }
-
     .section-eyebrow {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
       letter-spacing: .3em; text-transform: uppercase; color: var(--green-mid);
@@ -276,23 +330,22 @@
       background: var(--green-mid); opacity: .45;
     }
 
-    /* ────────────────────────────── ABOUT */
+    /* ═══════════════════════════════════════════
+       ABOUT
+    ═══════════════════════════════════════════ */
     #about { background: var(--bg2); border-top: 1px solid var(--border); text-align: center; }
-
     .about-heading {
       font-family: 'Lexend', sans-serif; font-weight: 700;
       font-size: clamp(26px, 3.4vw, 52px); line-height: 1.3; color: var(--text);
       margin-bottom: 52px;
     }
     .about-heading em { font-style: normal; font-weight: 200; color: var(--green-mid); }
-
     .about-body {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 14px;
       line-height: 2; color: rgba(246,230,209,.52);
       max-width: 640px; margin: 0 auto 14px;
     }
     .about-body:last-of-type { margin-bottom: 64px; }
-
     .about-stats {
       display: inline-grid; grid-template-columns: repeat(3,1fr);
       gap: 1px; background: var(--border); border: 1px solid var(--border);
@@ -316,13 +369,14 @@
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
       letter-spacing: .16em; text-transform: uppercase;
       color: rgba(246,230,209,.55); border: 1px solid rgba(246,230,209,.12);
-      padding: 9px 18px; transition: all .3s;
+      padding: 9px 18px; transition: all var(--t-std);
     }
     .disc-tag:hover { color: var(--green-mid); border-color: rgba(26,163,122,.42); }
 
-    /* ────────────────────────────── SERVICES */
+    /* ═══════════════════════════════════════════
+       SERVICES
+    ═══════════════════════════════════════════ */
     #services { border-top: 1px solid var(--border); text-align: center; }
-
     .services-heading {
       font-family: 'Lexend', sans-serif; font-weight: 700;
       font-size: clamp(30px, 4.4vw, 62px); line-height: 1.1; color: var(--text);
@@ -334,18 +388,15 @@
       line-height: 1.9; color: rgba(246,230,209,.36);
       max-width: 340px; margin: 0 auto 72px;
     }
-    .services-grid {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px; background: var(--border);
-    }
+    .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); }
     .service-card {
       background: var(--bg); padding: 56px 44px;
-      position: relative; overflow: hidden; transition: background .4s; text-align: center;
+      position: relative; overflow: hidden; transition: background var(--t-std) var(--ease); text-align: center;
     }
     .service-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(to right, transparent, var(--green-deep), transparent);
-      opacity: 0; transition: opacity .4s;
+      opacity: 0; transition: opacity var(--t-std) var(--ease);
     }
     .service-card:hover { background: #1e1e22; }
     .service-card:hover::before { opacity: 1; }
@@ -361,9 +412,10 @@
       line-height: 1.9; color: rgba(246,230,209,.4);
     }
 
-    /* ────────────────────────────── WORK */
+    /* ═══════════════════════════════════════════
+       WORK — premium project cards
+    ═══════════════════════════════════════════ */
     #work { border-top: 1px solid var(--border); text-align: center; }
-
     .work-title {
       font-family: 'Lexend', sans-serif; font-weight: 800;
       font-size: clamp(48px, 7vw, 100px); line-height: .88;
@@ -381,11 +433,22 @@
     .project-card {
       position: relative; overflow: hidden; background: var(--bg2);
       aspect-ratio: 4/3; cursor: none;
+      transition: transform var(--t-std) var(--ease);
     }
     .project-card.wide { grid-column: span 2; aspect-ratio: 16/7; }
-    .project-bg { position: absolute; inset: 0; transition: transform .7s cubic-bezier(.25,.46,.45,.94); }
-    .project-card:hover .project-bg { transform: scale(1.04); }
-    .project-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* image layer */
+    .project-bg {
+      position: absolute; inset: 0;
+      transition: transform var(--t-slow) var(--ease);
+      will-change: transform;
+    }
+    .project-card:hover .project-bg { transform: scale(1.05); }
+    .project-bg img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform var(--t-slow) var(--ease);
+      will-change: transform;
+    }
     .project-placeholder {
       width: 100%; height: 100%;
       background: linear-gradient(135deg, #1c3b35 0%, #1a1a1e 60%, #28282d 100%);
@@ -396,41 +459,31 @@
       letter-spacing: .28em; text-transform: uppercase;
       color: rgba(26,163,122,.22); border: 1px solid rgba(26,163,122,.1); padding: 8px 18px;
     }
+
+    /* gradient overlay — shifts to green on hover */
     .project-overlay {
-      position: absolute; inset: 0;
+      position: absolute; inset: 0; z-index: 2;
       background: linear-gradient(to top, rgba(18,18,22,.94) 0%, rgba(18,18,22,.18) 55%, transparent 100%);
-      z-index: 2; transition: background .4s ease;
+      transition: background var(--t-std) var(--ease);
     }
     .project-card:hover .project-overlay {
-      background: rgba(0,103,79,.55);
+      background: linear-gradient(
+        to top,
+        rgba(0,80,60,.88) 0%,
+        rgba(0,103,79,.42) 45%,
+        rgba(0,50,40,.12) 100%
+      );
     }
-    .project-hover {
-      position: absolute; inset: 0; z-index: 4;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 20px;
-      opacity: 0; transform: translateY(10px);
-      transition: opacity .35s ease, transform .35s ease;
-      pointer-events: none;
+
+    /* bottom info — slides up on hover */
+    .project-info {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      padding: 32px;
+      transition: transform var(--t-std) var(--ease), opacity var(--t-std) var(--ease);
     }
-    .project-card:hover .project-hover {
-      opacity: 1; transform: translateY(0);
-      pointer-events: all;
+    .project-card:hover .project-info {
+      transform: translateY(6px); opacity: 0;
     }
-    .project-hover-title {
-      font-family: 'Lexend', sans-serif; font-weight: 700;
-      font-size: clamp(14px, 1.4vw, 20px); letter-spacing: .06em;
-      text-transform: uppercase; color: var(--text); text-align: center;
-      padding: 0 24px;
-    }
-    .project-hover-btn {
-      font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 9px;
-      letter-spacing: .22em; text-transform: uppercase; color: var(--text);
-      border: 1px solid rgba(246,230,209,.55); padding: 11px 26px;
-      text-decoration: none; transition: all .25s;
-      background: transparent;
-    }
-    .project-hover-btn:hover { background: var(--text); color: var(--bg); }
-    .project-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 3; padding: 32px; }
     .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
     .project-tag {
       font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 8.5px;
@@ -439,27 +492,90 @@
     }
     .project-name {
       font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 18px;
-      color: var(--text); margin-bottom: 5px;
-    }
-    .project-meta {
-      font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 10.5px;
-      letter-spacing: .14em; color: rgba(246,230,209,.35);
+      color: var(--text);
     }
 
-    /* ────────────────────────────── TIMELINE */
+    /* hover layer — layered reveal */
+    .project-hover {
+      position: absolute; inset: 0; z-index: 4;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px;
+      pointer-events: none;
+    }
+    .project-hover-title {
+      font-family: 'Lexend', sans-serif; font-weight: 700;
+      font-size: clamp(14px, 1.4vw, 20px); letter-spacing: .05em;
+      text-transform: uppercase; color: var(--text);
+      text-align: center; padding: 0 28px;
+      opacity: 0; transform: translateY(18px);
+      transition: opacity var(--t-std) var(--ease), transform var(--t-std) var(--ease);
+      transition-delay: 0ms;
+    }
+    .project-card:hover .project-hover-title {
+      opacity: 1; transform: translateY(0);
+    }
+    .project-hover-btn {
+      font-family: 'Lexend', sans-serif; font-weight: 400; font-size: 9px;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--text);
+      border: 1px solid rgba(246,230,209,.5); padding: 12px 28px;
+      text-decoration: none; pointer-events: all;
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity var(--t-std) var(--ease),
+                  transform var(--t-std) var(--ease),
+                  background var(--t-fast) var(--ease),
+                  color var(--t-fast) var(--ease);
+      transition-delay: 150ms;
+      position: relative; overflow: hidden;
+    }
+    .project-card:hover .project-hover-btn {
+      opacity: 1; transform: translateY(0);
+    }
+    .project-hover-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--text); transform: scaleX(0); transform-origin: left;
+      transition: transform var(--t-std) var(--ease); z-index: -1;
+    }
+    .project-hover-btn:hover { color: var(--bg); border-color: var(--text); }
+    .project-hover-btn:hover::before { transform: scaleX(1); }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform var(--t-std) var(--ease);
+    }
+    .project-hover-btn:hover .btn-arrow { transform: translateX(5px); }
+
+    /* view all btn */
+    .work-viewall {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-family: 'Lexend', sans-serif; font-weight: 400; font-size: 9.5px;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--text);
+      border: 1px solid rgba(246,230,209,.22); padding: 16px 38px;
+      text-decoration: none; margin-top: 52px;
+      position: relative; overflow: hidden;
+      transition: color var(--t-std) var(--ease), border-color var(--t-std);
+    }
+    .work-viewall::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--green-deep); transform: scaleX(0); transform-origin: left;
+      transition: transform var(--t-std) var(--ease); z-index: -1;
+    }
+    .work-viewall:hover { color: var(--text); border-color: var(--green-mid); }
+    .work-viewall:hover::before { transform: scaleX(1); }
+    .work-viewall:hover .btn-arrow { transform: translateX(5px); }
+
+    /* ═══════════════════════════════════════════
+       TIMELINE
+    ═══════════════════════════════════════════ */
     #timeline { background: var(--bg2); border-top: 1px solid var(--border); text-align: center; }
-
     .section-title {
       font-family: 'Lexend', sans-serif; font-weight: 700;
       font-size: clamp(32px, 4.8vw, 62px); line-height: 1.1;
       color: var(--text); margin-bottom: 24px;
     }
     .section-title em { font-style: normal; font-weight: 200; color: var(--green-mid); }
-
     .timeline-intro {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 14px;
-      line-height: 1.9; color: var(--muted);
-      margin: 0 auto 72px; max-width: 520px;
+      line-height: 1.9; color: var(--muted); margin: 0 auto 72px; max-width: 520px;
     }
     .timeline-wrap { position: relative; max-width: 1000px; margin: 0 auto; text-align: left; }
     .timeline-wrap::before {
@@ -479,53 +595,59 @@
     .tl-desc    { font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 13px; line-height: 1.9; color: rgba(246,230,209,.5); margin-bottom: 12px; }
     .tl-tools   { font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(26,163,122,.55); }
 
-    /* ────────────────────────────── SKILLS */
+    /* ═══════════════════════════════════════════
+       SKILLS — capability cards (no percentages)
+    ═══════════════════════════════════════════ */
     #skills { border-top: 1px solid var(--border); text-align: center; }
-
     .skills-heading {
       font-family: 'Lexend', sans-serif; font-weight: 800;
       font-size: clamp(32px, 5vw, 68px); line-height: 1;
-      letter-spacing: -.02em; text-transform: uppercase; color: var(--text); margin-bottom: 64px;
+      letter-spacing: -.02em; text-transform: uppercase; color: var(--text); margin-bottom: 72px;
     }
     .skills-heading em { font-style: normal; font-weight: 200; color: var(--green-mid); }
 
-    .skills-cols {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 2px; background: var(--border); margin-bottom: 64px;
+    .cap-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border); text-align: left;
     }
-    .skills-col { background: var(--bg); padding: 44px; text-align: left; }
-    .skills-col-title {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .28em; text-transform: uppercase; color: var(--green-mid);
-      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    .cap-card {
+      background: var(--bg); padding: 48px 40px;
+      position: relative; overflow: hidden;
+      transition: background var(--t-std) var(--ease);
     }
-    .skills-col-title::before { content: ''; display: block; width: 20px; height: 1px; background: var(--green-mid); }
-    .skills-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .s-tag {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(246,230,209,.55); border: 1px solid rgba(246,230,209,.12);
-      padding: 8px 15px; transition: all .3s;
+    .cap-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 100%;
+      height: 1px; background: var(--green-mid);
+      transition: right var(--t-slow) var(--ease);
     }
-    .s-tag:hover { color: var(--green-mid); border-color: rgba(26,163,122,.42); }
+    .cap-card:hover { background: #1e1e22; }
+    .cap-card:hover::before { right: 0; }
+    .cap-number {
+      font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 11px;
+      letter-spacing: .3em; color: var(--green-mid); opacity: .6;
+      margin-bottom: 28px; display: block;
+    }
+    .cap-title {
+      font-family: 'Lexend', sans-serif; font-weight: 700;
+      font-size: clamp(14px, 1.4vw, 18px); letter-spacing: .04em;
+      text-transform: uppercase; color: var(--text); margin-bottom: 14px;
+      line-height: 1.3;
+    }
+    .cap-desc {
+      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 13px;
+      line-height: 1.85; color: rgba(246,230,209,.45);
+      margin-bottom: 24px;
+    }
+    .cap-tools {
+      font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 10px;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(26,163,122,.6);
+    }
 
-    .skill-bars { max-width: 860px; margin: 0 auto; text-align: left; }
-    .skill-bar-item {
-      display: grid; grid-template-columns: 190px 1fr 46px;
-      align-items: center; gap: 28px;
-      padding: 18px 0; border-bottom: 1px solid var(--border);
-    }
-    .skill-bar-name { font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 13px; color: var(--text); }
-    .skill-bar-track { height: 1px; background: rgba(246,230,209,.07); position: relative; }
-    .skill-bar-fill {
-      position: absolute; left: 0; top: 0; height: 100%;
-      background: linear-gradient(to right, var(--green-deep), var(--green-mid));
-    }
-    .skill-bar-pct { font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 10.5px; letter-spacing: .08em; color: var(--green-mid); text-align: right; }
-
-    /* ────────────────────────────── CONTACT */
+    /* ═══════════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════════ */
     #contact { background: var(--bg2); border-top: 1px solid var(--border); padding: 100px 52px 0; }
-
     .contact-inner {
       display: grid; grid-template-columns: 480px 1fr;
       gap: 72px; align-items: stretch;
@@ -541,18 +663,23 @@
       line-height: 1.9; color: rgba(246,230,209,.45); max-width: 420px; margin-bottom: 44px;
     }
     .contact-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
     .btn-primary {
       font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 9.5px;
       letter-spacing: .2em; text-transform: uppercase; color: var(--text);
       background: var(--green-deep); border: 1px solid var(--green-deep);
-      padding: 15px 30px; text-decoration: none; transition: all .3s;
+      padding: 15px 30px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: background var(--t-std) var(--ease), border-color var(--t-std);
     }
     .btn-primary:hover { background: var(--green-mid); border-color: var(--green-mid); }
+    .btn-primary:hover .btn-arrow { transform: translateX(4px); }
+
     .btn-secondary {
       font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 9.5px;
       letter-spacing: .2em; text-transform: uppercase; color: var(--text);
       background: transparent; border: 1px solid rgba(246,230,209,.22);
-      padding: 15px 30px; text-decoration: none; transition: all .3s;
+      padding: 15px 30px; text-decoration: none; transition: border-color var(--t-std);
     }
     .btn-secondary:hover { border-color: var(--text); }
 
@@ -567,7 +694,7 @@
       border: 1px solid rgba(26,163,122,.2); pointer-events: none;
     }
 
-    /* ── CONTACT PILLS — Full-width band */
+    /* ── pills full-width */
     .contact-pills-band {
       border-top: 1px solid var(--border);
       margin-left: -52px; margin-right: -52px;
@@ -580,16 +707,55 @@
       letter-spacing: .15em; text-transform: uppercase;
       color: rgba(246,230,209,.48);
       border-right: 1px solid var(--border);
-      padding: 22px 20px; text-decoration: none; transition: all .3s;
+      padding: 22px 20px; text-decoration: none; transition: all var(--t-std);
     }
     .contact-pill:last-child { border-right: none; }
     .contact-pill:hover { color: var(--text); background: rgba(26,163,122,.04); }
-    .contact-pill svg {
-      width: 12px; height: 12px; flex-shrink: 0;
-      stroke: currentColor; fill: none; stroke-width: 1.3;
-    }
+    .contact-pill svg { width: 12px; height: 12px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.3; }
 
-    /* ────────────────────────────── FOOTER */
+    /* ═══════════════════════════════════════════
+       PRE-FOOTER CTA SECTION
+    ═══════════════════════════════════════════ */
+    .cta-final {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 120px 52px; text-align: center;
+    }
+    .cta-final-eyebrow {
+      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
+      letter-spacing: .3em; text-transform: uppercase; color: var(--green-mid);
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .cta-final-eyebrow::before, .cta-final-eyebrow::after {
+      content: ''; display: block; width: 36px; height: 1px;
+      background: var(--green-mid); opacity: .45;
+    }
+    .cta-final-heading {
+      font-family: 'Lexend', sans-serif; font-weight: 800;
+      font-size: clamp(52px, 8vw, 120px); line-height: .9;
+      letter-spacing: -.03em; text-transform: uppercase; color: var(--text);
+      margin-bottom: 40px;
+    }
+    .cta-final-heading em { font-style: normal; font-weight: 200; color: var(--green-mid); }
+    .cta-final-sub {
+      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 14px;
+      line-height: 1.9; color: var(--muted); max-width: 480px;
+      margin: 0 auto 56px;
+    }
+    .cta-final-btn {
+      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 10px;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--text);
+      background: var(--green-deep); border: 1px solid var(--green-deep);
+      padding: 18px 44px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 14px;
+      transition: background var(--t-std) var(--ease), border-color var(--t-std);
+    }
+    .cta-final-btn:hover { background: var(--green-mid); border-color: var(--green-mid); }
+    .cta-final-btn:hover .btn-arrow { transform: translateX(6px); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
     footer {
       padding: 32px 52px; border-top: 1px solid var(--border); background: var(--bg2);
       display: flex; justify-content: space-between; align-items: center;
@@ -597,21 +763,26 @@
     .footer-copy { font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 9.5px; letter-spacing: .16em; color: var(--muted); }
     .footer-tag  { font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 13px; color: rgba(246,230,209,.2); }
 
-    /* ────────────────────────────── REVEAL */
-    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform .9s ease; }
+    /* ═══════════════════════════════════════════
+       REVEAL
+    ═══════════════════════════════════════════ */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    /* ────────────────────────────── RESPONSIVE */
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
     @media (max-width: 960px) {
       nav { padding: 18px 24px; }
       .nav-links, .nav-open, .btn-nav, .lang-toggle { display: none; }
       .hamburger { display: flex; }
       section { padding: 80px 24px; }
       #contact { padding: 80px 24px 0; }
+      .cta-final { padding: 80px 24px; }
       .services-grid { grid-template-columns: 1fr; }
       .projects-grid { grid-template-columns: 1fr; }
       .project-card.wide { grid-column: span 1; aspect-ratio: 4/3; }
-      .skills-cols { grid-template-columns: 1fr; }
+      .cap-grid { grid-template-columns: 1fr; }
       .contact-inner { grid-template-columns: 1fr; }
       .contact-photo { min-height: 300px; }
       .about-stats { min-width: unset; }
@@ -621,17 +792,20 @@
       .tl-right { padding: 24px 0 24px 28px; }
       .hero-name { font-size: clamp(42px, 12vw, 88px); }
       .hero-tags { display: none; }
-      .skill-bar-item { grid-template-columns: 120px 1fr 36px; }
       footer { flex-direction: column; gap: 12px; padding: 28px 24px; text-align: center; }
       .contact-pills-band { margin-left: -24px; margin-right: -24px; }
       .contact-pill { flex: 0 0 50%; border-bottom: 1px solid var(--border); }
       .contact-pill:nth-child(even) { border-right: none; }
+      .cta-final-heading { font-size: clamp(40px, 12vw, 80px); }
     }
   </style>
 </head>
 <body>
 
-  <div id="cursor"></div>
+  <!-- cursors -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+  <span id="cursor-label"></span>
 
   <!-- ═══════ MOBILE OVERLAY -->
   <div class="mobile-overlay" id="mobileOverlay">
@@ -660,7 +834,7 @@
     <div class="nav-cta">
       <span class="nav-open" data-i18n="nav.open">Open to Projects</span>
       <button class="lang-toggle" id="langToggle">FR</button>
-      <a class="btn-nav" href="#contact" data-i18n="nav.cta">Get in Touch</a>
+      <a class="btn-nav" href="#contact" data-i18n="nav.cta">Start a Project</a>
       <button class="hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -669,10 +843,11 @@
 
   <!-- ═══════ HERO -->
   <section id="hero">
-    <div class="hero-blur"></div>
-    <div class="hero-overlay"></div>
+    <div class="hero-blur" id="heroBlur"></div>
+    <div class="hero-overlay" id="heroOverlay"></div>
     <div class="hero-sharp" id="heroSharp"></div>
     <div class="hero-frame" id="heroFrame"></div>
+    <div class="hero-grain"></div>
     <div class="hero-tags">
       <span class="hero-tag-item" data-i18n="hero.tag1">Art Director</span>
       <span class="hero-tag-item" data-i18n="hero.tag2">Brand Design</span>
@@ -688,7 +863,6 @@
   <!-- ═══════ MARQUEE -->
   <div class="marquee-strip">
     <div class="marquee-track">
-      <!-- SET 1 -->
       <div class="marquee-item"><img src="ps.svg" style="width:30px;height:30px;flex-shrink:0;" alt="Photoshop"/><span class="marquee-label">Photoshop</span></div>
       <div class="marquee-item"><img src="ai.svg" style="width:30px;height:30px;flex-shrink:0;" alt="Illustrator"/><span class="marquee-label">Illustrator</span></div>
       <div class="marquee-item"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="28" height="28" rx="2" stroke="var(--green-mid)" stroke-width="1"/><polygon points="15,5 25,10 25,20 15,25 5,20 5,10" stroke="var(--green-mid)" stroke-width="1.2" fill="none"/><line x1="15" y1="5" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="25" y1="10" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="5" y1="10" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><circle cx="15" cy="15" r="2" fill="var(--green-mid)" opacity=".8"/></svg><span class="marquee-label">Cinema 4D</span></div>
@@ -699,7 +873,7 @@
       <div class="marquee-item"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="28" height="28" rx="2" stroke="var(--green-mid)" stroke-width="1"/><circle cx="15" cy="15" r="9" stroke="var(--green-mid)" stroke-width="1.2"/><circle cx="15" cy="15" r="5" stroke="var(--green-mid)" stroke-width="1.1" opacity=".6"/><circle cx="15" cy="15" r="1.8" fill="var(--green-mid)"/><line x1="15" y1="6" x2="15" y2="10" stroke="var(--green-mid)" stroke-width="1" stroke-linecap="round"/><line x1="15" y1="20" x2="15" y2="24" stroke="var(--green-mid)" stroke-width="1" stroke-linecap="round"/></svg><span class="marquee-label">DaVinci Resolve</span></div>
       <div class="marquee-item"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="28" height="28" rx="2" stroke="var(--green-mid)" stroke-width="1"/><polygon points="15,6 25,22 5,22" stroke="var(--green-mid)" stroke-width="1.3" fill="none" stroke-linejoin="round"/><line x1="15" y1="6" x2="15" y2="22" stroke="var(--green-mid)" stroke-width=".85" opacity=".45" stroke-dasharray="2 2"/><line x1="10" y1="17" x2="20" y2="17" stroke="var(--green-mid)" stroke-width="1.1" stroke-linecap="round"/></svg><span class="marquee-label">ArchiCAD</span></div>
       <div class="marquee-item"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="28" height="28" rx="2" stroke="var(--green-mid)" stroke-width="1"/><rect x="5" y="9" width="20" height="13" rx="1" stroke="var(--green-mid)" stroke-width="1.2"/><line x1="5" y1="14" x2="25" y2="14" stroke="var(--green-mid)" stroke-width=".85" opacity=".45"/><circle cx="9" cy="11.5" r="1.2" fill="var(--green-mid)" opacity=".7"/><path d="M9 17.5l3 3 8-6" stroke="var(--green-mid)" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/></svg><span class="marquee-label">Artlantis</span></div>
-      <!-- SET 2 (duplicate) -->
+      <!-- duplicate -->
       <div class="marquee-item"><img src="ps.svg" style="width:30px;height:30px;flex-shrink:0;" alt="Photoshop"/><span class="marquee-label">Photoshop</span></div>
       <div class="marquee-item"><img src="ai.svg" style="width:30px;height:30px;flex-shrink:0;" alt="Illustrator"/><span class="marquee-label">Illustrator</span></div>
       <div class="marquee-item"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="28" height="28" rx="2" stroke="var(--green-mid)" stroke-width="1"/><polygon points="15,5 25,10 25,20 15,25 5,20 5,10" stroke="var(--green-mid)" stroke-width="1.2" fill="none"/><line x1="15" y1="5" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="25" y1="10" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="5" y1="10" x2="15" y2="15" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><circle cx="15" cy="15" r="2" fill="var(--green-mid)" opacity=".8"/></svg><span class="marquee-label">Cinema 4D</span></div>
@@ -720,7 +894,6 @@
     <p class="about-body reveal" data-i18n="about.p1">I'm a graphic designer and visual creator based in Algiers with more than a decade of experience across branding, digital design, and visual communication.</p>
     <p class="about-body reveal" data-i18n="about.p2">My work focuses on creating clear and effective visual identities while exploring new creative tools and techniques. From traditional graphic design to motion, 3D, and AI-assisted creation, I enjoy building visual systems that are both meaningful and visually refined.</p>
     <p class="about-body reveal" data-i18n="about.p3">Curiosity and experimentation are central to my process. I believe strong design emerges from understanding real needs and translating them into thoughtful visual solutions.</p>
-
     <div class="reveal" style="display:flex;justify-content:center;margin-bottom:64px;">
       <div class="about-stats">
         <div class="stat"><div class="stat-num">15<sup>+</sup></div><div class="stat-label" data-i18n="about.stat1">Years Exp.</div></div>
@@ -728,7 +901,6 @@
         <div class="stat"><div class="stat-num">7<sup>+</sup></div><div class="stat-label" data-i18n="about.stat3">Disciplines</div></div>
       </div>
     </div>
-
     <div class="about-disciplines reveal">
       <span class="disc-tag">Brand Identity</span><span class="disc-tag">Graphic Design</span>
       <span class="disc-tag">Motion Design</span><span class="disc-tag">3D Visualization</span>
@@ -744,46 +916,21 @@
     <h2 class="services-heading reveal" data-i18n-html="services.heading">What I do &amp; <em>How I do it</em></h2>
     <p class="services-tagline reveal" data-i18n="services.tagline">Three disciplines, one principle: every visual should earn its place and leave a mark.</p>
     <div class="services-grid">
-
       <div class="service-card reveal">
-        <div class="service-icon-wrap">
-          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="14" cy="14" r="12" stroke="var(--green-mid)" stroke-width="1.3"/>
-            <circle cx="14" cy="14" r="7" stroke="var(--green-mid)" stroke-width="1.2"/>
-            <circle cx="14" cy="14" r="2.5" fill="var(--green-mid)"/>
-          </svg>
-        </div>
+        <div class="service-icon-wrap"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="12" stroke="var(--green-mid)" stroke-width="1.3"/><circle cx="14" cy="14" r="7" stroke="var(--green-mid)" stroke-width="1.2"/><circle cx="14" cy="14" r="2.5" fill="var(--green-mid)"/></svg></div>
         <h3 class="service-title" data-i18n="services.s1.title">Bold Branding &amp; Visual Identity</h3>
         <p class="service-desc" data-i18n="services.s1.desc">Building timeless brands with sharp logos, cohesive guidelines, and strong visual storytelling that connect instantly.</p>
       </div>
-
       <div class="service-card reveal">
-        <div class="service-icon-wrap">
-          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="3" width="24" height="17" rx="1.5" stroke="var(--green-mid)" stroke-width="1.3"/>
-            <line x1="9" y1="20" x2="19" y2="20" stroke="var(--green-mid)" stroke-width="1.2"/>
-            <line x1="14" y1="20" x2="14" y2="24" stroke="var(--green-mid)" stroke-width="1.2"/>
-            <line x1="8" y1="24" x2="20" y2="24" stroke="var(--green-mid)" stroke-width="1.2"/>
-          </svg>
-        </div>
+        <div class="service-icon-wrap"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="24" height="17" rx="1.5" stroke="var(--green-mid)" stroke-width="1.3"/><line x1="9" y1="20" x2="19" y2="20" stroke="var(--green-mid)" stroke-width="1.2"/><line x1="14" y1="20" x2="14" y2="24" stroke="var(--green-mid)" stroke-width="1.2"/><line x1="8" y1="24" x2="20" y2="24" stroke="var(--green-mid)" stroke-width="1.2"/></svg></div>
         <h3 class="service-title" data-i18n="services.s2.title">Smart Digital Design &amp; Interfaces</h3>
         <p class="service-desc" data-i18n="services.s2.desc">Designing smooth, modern, and human-centered experiences across apps, websites, and social content.</p>
       </div>
-
       <div class="service-card reveal">
-        <div class="service-icon-wrap">
-          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" stroke="var(--green-mid)" stroke-width="1.3" fill="none"/>
-            <line x1="14" y1="2" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/>
-            <line x1="26" y1="8" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/>
-            <line x1="2" y1="8" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/>
-            <circle cx="14" cy="14" r="2" fill="var(--green-mid)" opacity=".9"/>
-          </svg>
-        </div>
+        <div class="service-icon-wrap"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="14,2 26,8 26,20 14,26 2,20 2,8" stroke="var(--green-mid)" stroke-width="1.3" fill="none"/><line x1="14" y1="2" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="26" y1="8" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><line x1="2" y1="8" x2="14" y2="14" stroke="var(--green-mid)" stroke-width=".9" opacity=".55"/><circle cx="14" cy="14" r="2" fill="var(--green-mid)" opacity=".9"/></svg></div>
         <h3 class="service-title" data-i18n="services.s3.title">Motion, 3D &amp; Creative Exploration</h3>
         <p class="service-desc" data-i18n="services.s3.desc">From motion graphics and editing to 3D worlds and experimental tools — pushing ideas beyond static design.</p>
       </div>
-
     </div>
   </section>
 
@@ -793,28 +940,32 @@
     <h2 class="work-title reveal" data-i18n-html="work.title">Selected<br><em>Projects</em></h2>
     <div class="projects-grid">
 
+      <!-- 01 — Vimeo wide -->
       <div class="project-card wide reveal" id="card-vimeo">
         <div class="project-bg" style="background:#000;">
-          <iframe
-            id="vimeo-player"
+          <iframe id="vimeo-player"
             src="https://player.vimeo.com/video/1173747074?autoplay=0&muted=1&loop=1&byline=0&title=0&portrait=0&controls=0&dnt=1"
             style="width:100%;height:100%;border:0;display:block;pointer-events:none;"
-            allow="autoplay; fullscreen">
-          </iframe>
+            allow="autoplay; fullscreen"></iframe>
         </div>
         <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title">Video &amp; Animation — Project 01</span>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
+        </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Vidéo</span><span class="project-tag">Animation</span><span class="project-tag">Motion</span></div>
+          <div class="project-tags"><span class="project-tag">Video</span><span class="project-tag">Animation</span><span class="project-tag">Motion</span></div>
           <p class="project-name">Video &amp; Animation — Project 01</p>
         </div>
       </div>
 
+      <!-- 02 -->
       <div class="project-card reveal">
         <div class="project-bg"><img src="project-02.jpg" alt="Brand Identity — Project 02" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Brand Identity — Project 02</span>
-          <a class="project-hover-btn" href="projects.html">Voir le projet</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">Brand Identity</span><span class="project-tag">Visual Identity</span></div>
@@ -822,12 +973,13 @@
         </div>
       </div>
 
+      <!-- 03 -->
       <div class="project-card reveal">
         <div class="project-bg"><img src="project-03.jpg" alt="3D Exploration — Project 03" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">3D Exploration — Project 03</span>
-          <a class="project-hover-btn" href="projects.html">Voir le projet</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
@@ -835,12 +987,13 @@
         </div>
       </div>
 
+      <!-- 04 -->
       <div class="project-card reveal">
         <div class="project-bg"><img src="project-04.jpg" alt="Digital Design — Project 04" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Digital Design — Project 04</span>
-          <a class="project-hover-btn" href="projects.html">Voir le projet</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">Digital Design</span><span class="project-tag">UI</span></div>
@@ -848,12 +1001,13 @@
         </div>
       </div>
 
+      <!-- 05 -->
       <div class="project-card reveal">
         <div class="project-bg"><img src="project-05.jpg" alt="Logotype — Project 05" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Logotype — Project 05</span>
-          <a class="project-hover-btn" href="projects.html">Voir le projet</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">Logotype</span><span class="project-tag">Brand</span></div>
@@ -861,12 +1015,13 @@
         </div>
       </div>
 
+      <!-- 06 -->
       <div class="project-card reveal">
         <div class="project-bg"><img src="project-06.jpg" alt="Photography — Project 06" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Photography — Project 06</span>
-          <a class="project-hover-btn" href="projects.html">Voir le projet</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">Photography</span></div>
@@ -874,13 +1029,13 @@
         </div>
       </div>
 
-      <!-- 07 — Other Stuff -->
+      <!-- 07 — Other Stuff wide -->
       <div class="project-card wide reveal">
         <div class="project-bg"><div class="project-placeholder"><span>Coming soon</span></div></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Other Stuff — Project 07</span>
-          <a class="project-hover-btn" href="projects.html">See project</a>
+          <a class="project-hover-btn" href="projects.html">Explore Case Study <span class="btn-arrow">→</span></a>
         </div>
         <div class="project-info">
           <div class="project-tags"><span class="project-tag">Various</span><span class="project-tag">Experiments</span></div>
@@ -891,18 +1046,10 @@
     </div>
 
     <div style="text-align:center;margin-top:52px;">
-      <a href="projects.html"
-         style="font-family:'Lexend',sans-serif;font-weight:500;font-size:9.5px;
-                letter-spacing:.22em;text-transform:uppercase;color:var(--text);
-                border:1px solid rgba(246,230,209,.22);padding:16px 38px;
-                text-decoration:none;transition:all .3s;display:inline-block;"
-         onmouseenter="this.style.borderColor='var(--green-mid)';this.style.color='var(--green-mid)'"
-         onmouseleave="this.style.borderColor='rgba(246,230,209,.22)';this.style.color='var(--text)'"
-         data-i18n="work.viewall">
-        View all projects &nbsp;→
+      <a class="work-viewall" href="projects.html" data-i18n-btn="work.viewall">
+        View Selected Work <span class="btn-arrow">→</span>
       </a>
     </div>
-
   </section>
 
   <!-- ═══════ TIMELINE -->
@@ -911,86 +1058,65 @@
     <h2 class="section-title reveal" data-i18n-html="timeline.title">Professional <em>Journey</em></h2>
     <p class="timeline-intro reveal" data-i18n="timeline.intro">Tracing a path from studies to practice — blending creativity with technical skills across fifteen years of continuous growth.</p>
     <div class="timeline-wrap">
-
-      <div class="timeline-item reveal">
-        <div class="tl-left"></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"><p class="tl-date">2007 – 2010</p><p class="tl-company">Artistimo Art School</p><p class="tl-role">BTS Graphic Design</p><p class="tl-desc">Higher Technician Certificate in Art and Graphic Communication. Parallel self-training in Illustrator, After Effects, Premiere, Cinema 4D.</p></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"><p class="tl-date">2010 – 2011</p><p class="tl-company">Initiative Architecture</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Architectural plans, façade processing, and lithographic work. First professional environment at the crossroads of design and architecture.</p><p class="tl-tools">Photoshop · Illustrator · Archicad · Artlantis</p></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"><p class="tl-date">2011 – 2016</p><p class="tl-company">Intellix-Communication</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Web design, graphic design, print, animations, and photography. Five years of technical breadth across multiple production domains.</p><p class="tl-tools">Photoshop · Illustrator · InDesign · Flash · After Effects</p></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"><p class="tl-date">2017 – 2018</p><p class="tl-company">Wellcom Advertising</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Graphic design, digital communication, motion animations, and video editing in an advertising production environment.</p><p class="tl-tools">Photoshop · Illustrator · Lightroom · After Effects · Premiere · DaVinci</p></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"><p class="tl-date">2018 – 2019</p><p class="tl-company">IDH Tours</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Graphic design, animation, and motion video presentations for client-facing communication in the travel sector.</p><p class="tl-tools">Photoshop · Illustrator · After Effects · Premiere</p></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"><p class="tl-date">2020 – 2021</p><p class="tl-company">Nexus Digital Solutions</p><p class="tl-role">Graphic Designer &amp; Art Director</p><p class="tl-desc">Led creative direction across brand guidelines, digital content, 3D modeling, animations, editing, and print. First senior creative leadership role.</p><p class="tl-tools">Photoshop · Illustrator · Lightroom · After Effects · Premiere · Cinema 4D</p></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"></div>
-        <div class="tl-center"><div class="tl-dot active"></div></div>
-        <div class="tl-right"><p class="tl-date">2022 – Today</p><p class="tl-company">Guiddini</p><p class="tl-role">Art Director &amp; Graphic Designer</p><p class="tl-desc">Managing graphic design, brand guidelines, website &amp; app design, digital content, 3D modeling, animations, editing, print, and illustrations. Integrating generative AI tools into the creative production workflow.</p><p class="tl-tools">Photoshop · Illustrator · Cinema 4D · After Effects · Premiere · AI Tools</p></div>
-      </div>
-      <div class="timeline-item reveal">
-        <div class="tl-left"><p class="tl-date">All along</p><p class="tl-company">Freelance &amp; Consulting</p><p class="tl-role">Graphic Designer &amp; Trainer</p><p class="tl-desc">Brand communication for COMICCON Algeria. UIA website mockups. Brand identity, graphic guidelines, furniture and interior design. Graphic design trainer at Miquat School.</p><p class="tl-tools">Full stack creative · Training · Consulting</p></div>
-        <div class="tl-center"><div class="tl-dot"></div></div>
-        <div class="tl-right"></div>
-      </div>
-
+      <div class="timeline-item reveal"><div class="tl-left"></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"><p class="tl-date">2007 – 2010</p><p class="tl-company">Artistimo Art School</p><p class="tl-role">BTS Graphic Design</p><p class="tl-desc">Higher Technician Certificate in Art and Graphic Communication. Parallel self-training in Illustrator, After Effects, Premiere, Cinema 4D.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"><p class="tl-date">2010 – 2011</p><p class="tl-company">Initiative Architecture</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Architectural plans, façade processing, and lithographic work. First professional environment at the crossroads of design and architecture.</p><p class="tl-tools">Photoshop · Illustrator · Archicad · Artlantis</p></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"><p class="tl-date">2011 – 2016</p><p class="tl-company">Intellix-Communication</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Web design, graphic design, print, animations, and photography. Five years of technical breadth across multiple production domains.</p><p class="tl-tools">Photoshop · Illustrator · InDesign · Flash · After Effects</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"><p class="tl-date">2017 – 2018</p><p class="tl-company">Wellcom Advertising</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Graphic design, digital communication, motion animations, and video editing in an advertising production environment.</p><p class="tl-tools">Photoshop · Illustrator · Lightroom · After Effects · Premiere · DaVinci</p></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"><p class="tl-date">2018 – 2019</p><p class="tl-company">IDH Tours</p><p class="tl-role">Graphic Designer</p><p class="tl-desc">Graphic design, animation, and motion video presentations for client-facing communication in the travel sector.</p><p class="tl-tools">Photoshop · Illustrator · After Effects · Premiere</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"><p class="tl-date">2020 – 2021</p><p class="tl-company">Nexus Digital Solutions</p><p class="tl-role">Graphic Designer &amp; Art Director</p><p class="tl-desc">Led creative direction across brand guidelines, digital content, 3D modeling, animations, editing, and print. First senior creative leadership role.</p><p class="tl-tools">Photoshop · Illustrator · Lightroom · After Effects · Premiere · Cinema 4D</p></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"></div><div class="tl-center"><div class="tl-dot active"></div></div><div class="tl-right"><p class="tl-date">2022 – Today</p><p class="tl-company">Guiddini</p><p class="tl-role">Art Director &amp; Graphic Designer</p><p class="tl-desc">Managing graphic design, brand guidelines, website &amp; app design, digital content, 3D modeling, animations, editing, print, and illustrations. Integrating generative AI tools into the creative production workflow.</p><p class="tl-tools">Photoshop · Illustrator · Cinema 4D · After Effects · Premiere · AI Tools</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-left"><p class="tl-date">All along</p><p class="tl-company">Freelance &amp; Consulting</p><p class="tl-role">Graphic Designer &amp; Trainer</p><p class="tl-desc">Brand communication for COMICCON Algeria. UIA website mockups. Brand identity, graphic guidelines, furniture and interior design. Graphic design trainer at Miquat School.</p><p class="tl-tools">Full stack creative · Training · Consulting</p></div><div class="tl-center"><div class="tl-dot"></div></div><div class="tl-right"></div></div>
     </div>
   </section>
 
-  <!-- ═══════ SKILLS -->
+  <!-- ═══════ SKILLS — capability cards -->
   <section id="skills">
     <p class="section-eyebrow reveal" data-i18n="skills.eyebrow">Skills</p>
-    <h2 class="skills-heading reveal" data-i18n-html="skills.heading">Creative <em>Tools</em> &amp; Disciplines</h2>
+    <h2 class="skills-heading reveal" data-i18n-html="skills.heading">Creative <em>Capabilities</em></h2>
+    <div class="cap-grid">
 
-    <div class="skills-cols reveal">
-      <div class="skills-col">
-        <p class="skills-col-title" data-i18n="skills.col1">Disciplines</p>
-        <div class="skills-tags">
-          <span class="s-tag">Brand Identity</span><span class="s-tag">Graphic Design</span>
-          <span class="s-tag">Motion Design</span><span class="s-tag">3D Visualization</span>
-          <span class="s-tag">UI Concepts</span><span class="s-tag">Visual Storytelling</span>
-          <span class="s-tag">Art Direction</span><span class="s-tag">Print Design</span>
-          <span class="s-tag">Photography</span><span class="s-tag">AI Creation</span>
-        </div>
+      <div class="cap-card reveal">
+        <span class="cap-number">01</span>
+        <h3 class="cap-title" data-i18n="cap.1.title">Brand &amp; Visual Identity</h3>
+        <p class="cap-desc" data-i18n="cap.1.desc">Marks that outlast trends. Systems built for recognition, not decoration — from strategy to final guidelines.</p>
+        <p class="cap-tools">Photoshop · Illustrator · InDesign</p>
       </div>
-      <div class="skills-col">
-        <p class="skills-col-title" data-i18n="skills.col2">Focus Areas</p>
-        <div class="skills-tags">
-          <span class="s-tag">Brand Strategy</span><span class="s-tag">Visual Identity Systems</span>
-          <span class="s-tag">Logo Design</span><span class="s-tag">Design Guidelines</span>
-          <span class="s-tag">Social Media Content</span><span class="s-tag">Video Editing</span>
-          <span class="s-tag">3D Stands &amp; Events</span><span class="s-tag">Interior Visualization</span>
-          <span class="s-tag">Illustration</span><span class="s-tag">Prompt Engineering</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="skill-bars reveal">
-      <div class="skill-bar-item"><span class="skill-bar-name">Photoshop</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div><span class="skill-bar-pct">90%</span></div>
-      <div class="skill-bar-item"><span class="skill-bar-name">Illustrator</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div><span class="skill-bar-pct">90%</span></div>
-      <div class="skill-bar-item"><span class="skill-bar-name">Cinema 4D</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div><span class="skill-bar-pct">75%</span></div>
-      <div class="skill-bar-item"><span class="skill-bar-name">After Effects</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%"></div></div><span class="skill-bar-pct">60%</span></div>
-      <div class="skill-bar-item"><span class="skill-bar-name">Premiere Pro</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%"></div></div><span class="skill-bar-pct">60%</span></div>
-      <div class="skill-bar-item"><span class="skill-bar-name">InDesign</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:40%"></div></div><span class="skill-bar-pct">40%</span></div>
+      <div class="cap-card reveal">
+        <span class="cap-number">02</span>
+        <h3 class="cap-title" data-i18n="cap.2.title">Motion &amp; Video</h3>
+        <p class="cap-desc" data-i18n="cap.2.desc">Giving static ideas a heartbeat. Motion graphics, brand films, and video editing that amplify the message.</p>
+        <p class="cap-tools">After Effects · Premiere · DaVinci Resolve</p>
+      </div>
+
+      <div class="cap-card reveal">
+        <span class="cap-number">03</span>
+        <h3 class="cap-title" data-i18n="cap.3.title">3D &amp; Visualization</h3>
+        <p class="cap-desc" data-i18n="cap.3.desc">Spaces and objects before they exist. From product renders to architectural visualization and event stands.</p>
+        <p class="cap-tools">Cinema 4D · Artlantis · ArchiCAD</p>
+      </div>
+
+      <div class="cap-card reveal">
+        <span class="cap-number">04</span>
+        <h3 class="cap-title" data-i18n="cap.4.title">Digital &amp; UI Design</h3>
+        <p class="cap-desc" data-i18n="cap.4.desc">Screens that feel considered. Web mockups, app interfaces, and digital content systems built for clarity.</p>
+        <p class="cap-tools">Photoshop · Illustrator · Web</p>
+      </div>
+
+      <div class="cap-card reveal">
+        <span class="cap-number">05</span>
+        <h3 class="cap-title" data-i18n="cap.5.title">Art Direction</h3>
+        <p class="cap-desc" data-i18n="cap.5.desc">Curating the vision, not just executing it. Creative oversight across campaigns, shoots, and brand worlds.</p>
+        <p class="cap-tools">Full creative stack · Strategy · Concept</p>
+      </div>
+
+      <div class="cap-card reveal">
+        <span class="cap-number">06</span>
+        <h3 class="cap-title" data-i18n="cap.6.title">Photography &amp; AI</h3>
+        <p class="cap-desc" data-i18n="cap.6.desc">Light and generation as design tools. Product, architectural, and experimental imagery with AI-assisted workflows.</p>
+        <p class="cap-tools">Lightroom · Midjourney · Runway</p>
+      </div>
+
     </div>
   </section>
 
@@ -1005,13 +1131,13 @@
         <h2 class="contact-heading" data-i18n-html="contact.heading">Got a brief?<br>A spark? <em>Let's talk.</em></h2>
         <p class="contact-desc" data-i18n="contact.desc">Whether it's a brand in the making or a concept that needs form — open to meaningful collaborations with people who value strong visual thinking.</p>
         <div class="contact-btns">
-          <a class="btn-primary"   href="mailto:tamime.kaddour.b@gmail.com" data-i18n="contact.btn1">Get in Touch</a>
+          <a class="btn-primary" href="mailto:tamime.kaddour.b@gmail.com" data-i18n="contact.btn1">
+            Start a Project <span class="btn-arrow">→</span>
+          </a>
           <a class="btn-secondary" href="https://www.behance.net/Tamime" target="_blank" data-i18n="contact.btn2">View Behance</a>
         </div>
       </div>
     </div>
-
-    <!-- Pills — full-width band -->
     <div class="contact-pills-band">
       <a class="contact-pill" href="mailto:tamime.kaddour.b@gmail.com">
         <svg viewBox="0 0 12 12"><rect x="1" y="2.5" width="10" height="7" rx=".5"/><path d="M1 3.5L6 7l5-3.5"/></svg>
@@ -1040,6 +1166,16 @@
     </div>
   </section>
 
+  <!-- ═══════ CTA FINAL -->
+  <section class="cta-final">
+    <p class="cta-final-eyebrow reveal" data-i18n="cta.eyebrow">Ready?</p>
+    <h2 class="cta-final-heading reveal" data-i18n-html="cta.heading">Let's Build<br><em>Something.</em></h2>
+    <p class="cta-final-sub reveal" data-i18n="cta.sub">Available for brand, motion, 3D, and digital design projects — based in Algiers, working globally.</p>
+    <a class="cta-final-btn reveal" href="mailto:tamime.kaddour.b@gmail.com" data-i18n="cta.btn">
+      Start a Project <span class="btn-arrow">→</span>
+    </a>
+  </section>
+
   <!-- ═══════ FOOTER -->
   <footer>
     <p class="footer-copy" data-i18n="footer.copy">© 2026 Tamime Kaddour — All rights reserved</p>
@@ -1058,14 +1194,12 @@
         'nav.skills':      'Skills',
         'nav.contact':     'Contact',
         'nav.open':        'Open to Projects',
-        'nav.cta':         'Get in Touch',
-
+        'nav.cta':         'Start a Project',
         'hero.role':  'Art Director & Graphic Designer',
         'hero.tag1':  'Art Director',
         'hero.tag2':  'Brand Design',
         'hero.tag3':  'Visual Identity',
         'hero.tag4':  'Algiers, Algeria',
-
         'about.eyebrow': 'About',
         'about.heading': 'I turn visual thinking into<br><em>clear, lasting identities</em><br>that resonate.',
         'about.p1':  "I'm a graphic designer and visual creator based in Algiers with more than a decade of experience across branding, digital design, and visual communication.",
@@ -1074,7 +1208,6 @@
         'about.stat1': 'Years Exp.',
         'about.stat2': 'Studios',
         'about.stat3': 'Disciplines',
-
         'services.eyebrow': 'Services',
         'services.heading': 'What I do &amp; <em>How I do it</em>',
         'services.tagline': 'Three disciplines, one principle: every visual should earn its place and leave a mark.',
@@ -1084,26 +1217,35 @@
         'services.s2.desc':  'Designing smooth, modern, and human-centered experiences across apps, websites, and social content.',
         'services.s3.title': 'Motion, 3D & Creative Exploration',
         'services.s3.desc':  'From motion graphics and editing to 3D worlds and experimental tools — pushing ideas beyond static design.',
-
         'work.eyebrow': 'Work',
         'work.title':   'Selected<br><em>Projects</em>',
-        'work.viewall': 'View all projects →',
-
+        'work.viewall': 'View Selected Work →',
         'timeline.eyebrow': 'Experience',
         'timeline.title':   'Professional <em>Journey</em>',
         'timeline.intro':   'Tracing a path from studies to practice — blending creativity with technical skills across fifteen years of continuous growth.',
-
         'skills.eyebrow': 'Skills',
-        'skills.heading': 'Creative <em>Tools</em> &amp; Disciplines',
-        'skills.col1': 'Disciplines',
-        'skills.col2': 'Focus Areas',
-
+        'skills.heading': 'Creative <em>Capabilities</em>',
+        'cap.1.title': 'Brand & Visual Identity',
+        'cap.1.desc':  'Marks that outlast trends. Systems built for recognition, not decoration — from strategy to final guidelines.',
+        'cap.2.title': 'Motion & Video',
+        'cap.2.desc':  'Giving static ideas a heartbeat. Motion graphics, brand films, and video editing that amplify the message.',
+        'cap.3.title': '3D & Visualization',
+        'cap.3.desc':  'Spaces and objects before they exist. From product renders to architectural visualization and event stands.',
+        'cap.4.title': 'Digital & UI Design',
+        'cap.4.desc':  'Screens that feel considered. Web mockups, app interfaces, and digital content systems built for clarity.',
+        'cap.5.title': 'Art Direction',
+        'cap.5.desc':  'Curating the vision, not just executing it. Creative oversight across campaigns, shoots, and brand worlds.',
+        'cap.6.title': 'Photography & AI',
+        'cap.6.desc':  'Light and generation as design tools. Product, architectural, and experimental imagery with AI-assisted workflows.',
         'contact.eyebrow': 'Contact',
         'contact.heading': "Got a brief?<br>A spark? <em>Let's talk.</em>",
         'contact.desc':    "Whether it's a brand in the making or a concept that needs form — open to meaningful collaborations with people who value strong visual thinking.",
-        'contact.btn1':    'Get in Touch',
+        'contact.btn1':    'Start a Project',
         'contact.btn2':    'View Behance',
-
+        'cta.eyebrow': 'Ready?',
+        'cta.heading': "Let's Build<br><em>Something.</em>",
+        'cta.sub':     'Available for brand, motion, 3D, and digital design projects — based in Algiers, working globally.',
+        'cta.btn':     'Start a Project',
         'footer.copy': '© 2026 Tamime Kaddour — All rights reserved',
       },
       fr: {
@@ -1113,14 +1255,12 @@
         'nav.skills':      'Compétences',
         'nav.contact':     'Contact',
         'nav.open':        'Disponible',
-        'nav.cta':         'Me contacter',
-
+        'nav.cta':         'Démarrer un projet',
         'hero.role':  'Directeur Artistique & Graphiste',
         'hero.tag1':  'Directeur Artistique',
         'hero.tag2':  'Design de Marque',
         'hero.tag3':  'Identité Visuelle',
         'hero.tag4':  'Alger, Algérie',
-
         'about.eyebrow': 'À propos',
         'about.heading': 'Je transforme la pensée visuelle en<br><em>identités claires et durables</em><br>qui résonnent.',
         'about.p1':  "Graphiste et créateur visuel basé à Alger, avec plus d'une décennie d'expérience en branding, design digital et communication visuelle.",
@@ -1129,7 +1269,6 @@
         'about.stat1': "Ans d'exp.",
         'about.stat2': 'Structures',
         'about.stat3': 'Disciplines',
-
         'services.eyebrow': 'Services',
         'services.heading': 'Ce que je fais &amp; <em>Comment je le fais</em>',
         'services.tagline': 'Trois disciplines, un principe : chaque visuel doit mériter sa place et laisser une trace.',
@@ -1139,26 +1278,35 @@
         'services.s2.desc':  "Concevoir des expériences fluides, modernes et centrées sur l'humain — apps, sites web, contenus digitaux.",
         'services.s3.title': 'Motion, 3D & Exploration Créative',
         'services.s3.desc':  "Du motion design et de l'édition vidéo aux univers 3D et aux outils expérimentaux — pousser les idées au-delà du design statique.",
-
         'work.eyebrow': 'Travaux',
         'work.title':   'Projets<br><em>Sélectionnés</em>',
-        'work.viewall': 'Voir tous les projets →',
-
+        'work.viewall': 'Voir les travaux →',
         'timeline.eyebrow': 'Parcours',
         'timeline.title':   'Parcours <em>Professionnel</em>',
         'timeline.intro':   "Un chemin tracé des études à la pratique — alliant créativité et compétences techniques à travers quinze ans de progression continue.",
-
         'skills.eyebrow': 'Compétences',
-        'skills.heading': 'Outils <em>Créatifs</em> &amp; Disciplines',
-        'skills.col1': 'Disciplines',
-        'skills.col2': 'Domaines de focus',
-
+        'skills.heading': 'Compétences <em>Créatives</em>',
+        'cap.1.title': 'Brand & Identité Visuelle',
+        'cap.1.desc':  "Des marques qui durent. Des systèmes conçus pour la reconnaissance, pas la décoration — de la stratégie aux chartes finales.",
+        'cap.2.title': 'Motion & Vidéo',
+        'cap.2.desc':  "Donner un rythme aux idées statiques. Motion graphics, films de marque et montage vidéo qui amplifient le message.",
+        'cap.3.title': '3D & Visualisation',
+        'cap.3.desc':  "Des espaces avant qu'ils existent. Du rendu produit à la visualisation architecturale et aux stands événementiels.",
+        'cap.4.title': 'Design Digital & UI',
+        'cap.4.desc':  "Des écrans qui semblent pensés. Maquettes web, interfaces apps et systèmes de contenu digital construits pour la clarté.",
+        'cap.5.title': 'Direction Artistique',
+        'cap.5.desc':  "Curating la vision, pas seulement l'exécuter. Supervision créative sur campagnes, shootings et univers de marque.",
+        'cap.6.title': 'Photographie & IA',
+        'cap.6.desc':  "La lumière et la génération comme outils de design. Imagerie produit, architecturale et expérimentale avec workflows IA.",
         'contact.eyebrow': 'Contact',
         'contact.heading': "Un brief ?<br>Une idée ? <em>Parlons-en.</em>",
         'contact.desc':    "Qu'il s'agisse d'une marque en construction ou d'un concept à mettre en forme — ouvert aux collaborations avec des personnes qui valorisent la pensée visuelle forte.",
-        'contact.btn1':    'Me contacter',
+        'contact.btn1':    'Démarrer un projet',
         'contact.btn2':    'Voir Behance',
-
+        'cta.eyebrow': 'Prêt ?',
+        'cta.heading': "Construisons<br><em>Quelque chose.</em>",
+        'cta.sub':     "Disponible pour des projets de brand, motion, 3D et design digital — basé à Alger, travaillant globalement.",
+        'cta.btn':     'Démarrer un projet',
         'footer.copy': '© 2026 Tamime Kaddour — Tous droits réservés',
       }
     };
@@ -1174,35 +1322,25 @@
         const key = el.dataset.i18nHtml;
         if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
       });
-      const opposite = lang === 'en' ? 'FR' : 'EN';
-      document.getElementById('langToggle').textContent = opposite;
-      document.getElementById('mobileLangToggle').textContent = opposite;
+      document.getElementById('langToggle').textContent     = lang === 'en' ? 'FR' : 'EN';
+      document.getElementById('mobileLangToggle').textContent = lang === 'en' ? 'FR' : 'EN';
       document.documentElement.lang = lang;
       localStorage.setItem('lang', lang);
       currentLang = lang;
     }
 
-    /* ── LANG TOGGLE */
-    document.getElementById('langToggle').addEventListener('click', () => {
-      applyLang(currentLang === 'en' ? 'fr' : 'en');
-    });
-    document.getElementById('mobileLangToggle').addEventListener('click', () => {
-      applyLang(currentLang === 'en' ? 'fr' : 'en');
-    });
-
-    /* Apply saved language on load */
+    document.getElementById('langToggle').addEventListener('click', () => applyLang(currentLang === 'en' ? 'fr' : 'en'));
+    document.getElementById('mobileLangToggle').addEventListener('click', () => applyLang(currentLang === 'en' ? 'fr' : 'en'));
     applyLang(currentLang);
 
     /* ══════════════════════════════════════
-       HAMBURGER / MOBILE OVERLAY
+       HAMBURGER
     ══════════════════════════════════════ */
     const hamburger   = document.getElementById('hamburger');
     const overlay     = document.getElementById('mobileOverlay');
     const mobileClose = document.getElementById('mobileNavClose');
-
-    function openMenu()  { overlay.classList.add('open');    document.body.style.overflow = 'hidden'; }
-    function closeMenu() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
-
+    const openMenu  = () => { overlay.classList.add('open');    document.body.style.overflow = 'hidden'; };
+    const closeMenu = () => { overlay.classList.remove('open'); document.body.style.overflow = ''; };
     hamburger.addEventListener('click', openMenu);
     mobileClose.addEventListener('click', closeMenu);
     overlay.querySelectorAll('.mobile-links a').forEach(a => a.addEventListener('click', closeMenu));
@@ -1210,48 +1348,121 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
     /* ══════════════════════════════════════
-       NAV SCROLL
+       NAV — progressive scroll + hide/show
     ══════════════════════════════════════ */
     const mainNav = document.getElementById('mainNav');
+    let lastScrollY = 0;
+    let navVisible = true;
+    let ticking = false;
+
     window.addEventListener('scroll', () => {
-      mainNav.classList.toggle('scrolled', window.scrollY > 60);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          const p = Math.min(y / 280, 1);
+
+          mainNav.style.background    = `rgba(28,28,32,${p * 0.95})`;
+          mainNav.style.backdropFilter = `blur(${p * 20}px)`;
+          mainNav.style.webkitBackdropFilter = `blur(${p * 20}px)`;
+          mainNav.style.boxShadow     = p > 0.4 ? `0 1px 0 rgba(26,163,122,${(p - 0.4) * 0.3})` : 'none';
+          mainNav.style.paddingTop    = `${22 - p * 8}px`;
+          mainNav.style.paddingBottom = `${22 - p * 8}px`;
+
+          // hide on scroll down, show on scroll up
+          if (y > lastScrollY + 8 && y > 120) {
+            if (navVisible) {
+              mainNav.style.transform = 'translateY(-100%)';
+              navVisible = false;
+            }
+          } else if (y < lastScrollY - 4) {
+            if (!navVisible) {
+              mainNav.style.transform = 'translateY(0)';
+              navVisible = true;
+            }
+          }
+          lastScrollY = y;
+          ticking = false;
+        });
+        ticking = true;
+      }
     }, { passive: true });
 
     /* ══════════════════════════════════════
-       CURSOR
+       CURSOR — dot + trailing ring + label
     ══════════════════════════════════════ */
-    const cursor = document.getElementById('cursor');
+    const dot   = document.getElementById('cursor-dot');
+    const ring  = document.getElementById('cursor-ring');
+    const label = document.getElementById('cursor-label');
+    let mx = window.innerWidth/2, my = window.innerHeight/2;
+    let rx = mx, ry = my;
+
     document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top  = e.clientY + 'px';
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+      label.style.left = mx + 'px';
+      label.style.top  = my + 'px';
     });
-    document.querySelectorAll('a, button, .service-card, .project-card').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('large'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('large'));
+
+    (function ringLoop() {
+      rx += (mx - rx) * 0.11;
+      ry += (my - ry) * 0.11;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(ringLoop);
+    })();
+
+    function setLabel(txt) {
+      label.textContent = txt;
+      label.classList.toggle('visible', txt !== '');
+    }
+
+    document.querySelectorAll('.project-card').forEach(el => {
+      el.addEventListener('mouseenter', () => setLabel('View'));
+      el.addEventListener('mouseleave', () => setLabel(''));
+    });
+    document.getElementById('hero').addEventListener('mouseenter', () => setLabel('Scroll'));
+    document.getElementById('hero').addEventListener('mouseleave', () => setLabel(''));
+    document.querySelectorAll('.btn-primary, .btn-secondary, .btn-nav, .mobile-cta, .cta-final-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => setLabel('Click'));
+      el.addEventListener('mouseleave', () => setLabel(''));
     });
 
     /* ══════════════════════════════════════
-       HERO LENS
+       HERO — mouse parallax on layers
     ══════════════════════════════════════ */
-    const heroEl  = document.getElementById('hero');
-    const sharpEl = document.getElementById('heroSharp');
-    const frameEl = document.getElementById('heroFrame');
+    const heroEl    = document.getElementById('hero');
+    const heroBlur  = document.getElementById('heroBlur');
+    const heroOver  = document.getElementById('heroOverlay');
+    const sharpEl   = document.getElementById('heroSharp');
+    const frameEl   = document.getElementById('heroFrame');
     const FW = 340, FH = 420;
-    let lx = window.innerWidth / 2, ly = window.innerHeight / 2;
+    let lx = window.innerWidth/2, ly = window.innerHeight/2;
     let tx = lx, ty = ly, frameVisible = false;
+    let hpx = 0, hpy = 0; // hero parallax target
 
     heroEl.addEventListener('mousemove', e => {
       const r = heroEl.getBoundingClientRect();
       tx = e.clientX - r.left;
       ty = e.clientY - r.top;
+      hpx = (e.clientX - r.width/2) / r.width;
+      hpy = (e.clientY - r.height/2) / r.height;
       if (!frameVisible) { frameVisible = true; frameEl.classList.add('visible'); }
     });
     heroEl.addEventListener('mouseleave', () => {
       frameVisible = false;
       frameEl.classList.remove('visible');
       sharpEl.style.clipPath = 'inset(50% 50% 50% 50%)';
+      hpx = 0; hpy = 0;
     });
-    (function animFrame() {
+
+    let clx = 0, cly = 0; // current parallax lerped
+    (function heroLoop() {
+      clx += (hpx - clx) * 0.06;
+      cly += (hpy - cly) * 0.06;
+      heroBlur.style.transform = `scale(1.12) translate(${clx * -14}px, ${cly * -10}px)`;
+      heroOver.style.transform = `translate(${clx * -5}px, ${cly * -3}px)`;
+
       lx += (tx - lx) * 0.075;
       ly += (ty - ly) * 0.075;
       const W = heroEl.offsetWidth, H = heroEl.offsetHeight;
@@ -1261,8 +1472,31 @@
         sharpEl.style.clipPath =
           `inset(${ly - FH/2}px ${W - lx - FW/2}px ${H - ly - FH/2}px ${lx - FW/2}px)`;
       }
-      requestAnimationFrame(animFrame);
+      requestAnimationFrame(heroLoop);
     })();
+
+    /* ══════════════════════════════════════
+       PROJECT CARDS — parallax + magnetic
+    ══════════════════════════════════════ */
+    document.querySelectorAll('.project-card').forEach(card => {
+      const bg  = card.querySelector('.project-bg img');
+      const ifr = card.querySelector('.project-bg iframe');
+      const target = bg || ifr;
+
+      card.addEventListener('mousemove', e => {
+        const r  = card.getBoundingClientRect();
+        const dx = (e.clientX - r.left - r.width/2) / r.width;
+        const dy = (e.clientY - r.top  - r.height/2) / r.height;
+        // magnetic: card moves slightly toward cursor
+        card.style.transform = `translate(${dx * 5}px, ${dy * 4}px)`;
+        // image moves opposite = depth parallax
+        if (target) target.style.transform = `scale(1.08) translate(${dx * -14}px, ${dy * -10}px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translate(0,0)';
+        if (target) target.style.transform = 'scale(1)';
+      });
+    });
 
     /* ══════════════════════════════════════
        SCROLL REVEAL
@@ -1277,7 +1511,9 @@
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    /* ── VIMEO SCROLL AUTOPLAY */
+    /* ══════════════════════════════════════
+       VIMEO SCROLL AUTOPLAY
+    ══════════════════════════════════════ */
     const vimeoPlayer = new Vimeo.Player('vimeo-player');
     const vimeoCard   = document.getElementById('card-vimeo');
     const vimeoObs = new IntersectionObserver(entries => {
