@@ -9,14 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-  <!-- [FIX 8] Meta SEO / Open Graph -->
-  <meta name="description" content="All projects — Tamime Kaddour, Art Director & Graphic Designer based in Algiers.">
-  <meta property="og:title" content="Projects — Tamime Kaddour">
-  <meta property="og:description" content="Visual identity, motion, 3D and digital design.">
-  <meta property="og:image" content="https://tamimekaddour.github.io/portfolio/photo.jpg">
-  <meta property="og:url" content="https://tamimekaddour.github.io/portfolio/projects.html">
-  <meta property="og:type" content="website">
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -33,10 +25,9 @@
 
     html { scroll-behavior: smooth; }
     body {
-      /* [FIX 5] cursor:none retiré du CSS — appliqué via JS après init */
       background: var(--bg); color: var(--text);
       font-family: 'Lexend', sans-serif;
-      overflow-x: hidden;
+      overflow-x: hidden; cursor: none;
     }
 
     /* ── CURSOR */
@@ -45,8 +36,7 @@
       background: var(--green-mid); border-radius: 50%;
       pointer-events: none; z-index: 9999;
       transform: translate(-50%,-50%);
-      /* [FIX 6] border-radius ajouté à la transition */
-      transition: width .2s, height .2s, background .2s, border-radius .2s;
+      transition: width .2s, height .2s, background .2s;
     }
     #cursor.large {
       width: 44px; height: 44px; background: transparent;
@@ -73,7 +63,6 @@
       transition: color .3s;
     }
     .nav-back:hover { color: var(--text); }
-    /* [BUG 1] La flèche est gérée uniquement ici, pas dans le JS */
     .nav-back::before {
       content: '←'; font-size: 14px; line-height: 1;
     }
@@ -365,11 +354,10 @@
   <!-- ═══════ NAV -->
   <nav>
     <a class="nav-logo" href="index.html"><img src="logo.svg" alt="Tamime Kaddour" /></a>
-    <!-- [BUG 1] textContent géré par JS sans le ← (le ::before CSS s'en charge) -->
-    <a class="nav-back" href="index.html" data-i18n="nav.back">Back to portfolio</a>
+    <a class="nav-back" href="index.html">Back to portfolio</a>
     <div style="display:flex;align-items:center;gap:14px;">
       <button class="lang-toggle" id="langToggle">FR</button>
-      <a class="nav-cta" href="index.html#contact" data-i18n="nav.cta">Get in Touch</a>
+      <a class="nav-cta" href="index.html#contact">Get in Touch</a>
     </div>
   </nav>
 
@@ -382,23 +370,16 @@
     </h1>
     <p class="page-desc" data-i18n="desc">A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.</p>
     <div class="filters">
-      <button class="filter-btn active" data-filter="all"    data-i18n="f.all">All</button>
-      <button class="filter-btn" data-filter="brand"         data-i18n="f.brand">Brand Identity</button>
-      <button class="filter-btn" data-filter="motion"        data-i18n="f.motion">Motion & Video</button>
-      <button class="filter-btn" data-filter="3d"            data-i18n="f.3d">3D</button>
-      <button class="filter-btn" data-filter="digital"       data-i18n="f.digital">Digital</button>
-      <button class="filter-btn" data-filter="photo"         data-i18n="f.photo">Photography</button>
+      <button class="filter-btn active" data-filter="all"     data-i18n="f.all">All</button>
+      <button class="filter-btn"        data-filter="brand"   data-i18n="f.brand">Brand Identity</button>
+      <button class="filter-btn"        data-filter="motion"  data-i18n="f.motion">Motion & Video</button>
+      <button class="filter-btn"        data-filter="3d"      data-i18n="f.3d">3D</button>
+      <button class="filter-btn"        data-filter="digital" data-i18n="f.digital">Digital</button>
+      <button class="filter-btn"        data-filter="photo"   data-i18n="f.photo">Photography</button>
     </div>
   </header>
 
-  <!-- ═══════ GRID
-       Layout 3 colonnes :
-       Ligne 1 : V01 (wide 2col) + P02
-       Ligne 2 : P03 + P04 + P05
-       Ligne 3 : P06 + V02 + V03
-       Ligne 4 : V04 + V05 + V06
-       Ligne 5 : V07 (wide 2col) + V08   ← [FIX 3]
-  -->
+  <!-- ═══════ GRID -->
   <section class="projects-section">
     <div class="projects-grid" id="projectsGrid">
 
@@ -414,23 +395,22 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v01.title">Motion &amp; Animation — Video 01</span>
-          <a class="project-hover-btn" href="https://vimeo.com/1173747074" target="_blank" rel="noopener" data-i18n="v.watch">Watch on Vimeo</a>
+          <span class="project-hover-title" data-i18n="v01.title">Motion &amp; Animation — Vidéo 01</span>
+          <a class="project-hover-btn" href="https://vimeo.com/1173747074" target="_blank" rel="noopener" data-i18n="v.watch">Voir sur Vimeo</a>
         </div>
         <div class="project-info">
           <div class="project-tags">
             <span class="project-tag">Motion</span>
             <span class="project-tag">Animation</span>
-            <span class="project-tag">Video</span>
+            <span class="project-tag">Vidéo</span>
           </div>
-          <p class="project-name" data-i18n="v01.title">Motion &amp; Animation — Video 01</p>
+          <p class="project-name" data-i18n="v01.title">Motion &amp; Animation — Vidéo 01</p>
         </div>
       </div>
 
       <!-- ══ P02 — Brand ══ -->
-      <!-- [FIX 7] loading="lazy" ajouté -->
       <div class="project-card reveal" data-category="brand">
-        <div class="project-bg"><img src="project-02.jpg" alt="Brand Identity — Projet 02" loading="lazy" /></div>
+        <div class="project-bg"><img src="project-02.jpg" alt="Brand Identity — Projet 02" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Brand Identity — Projet 02</span>
@@ -443,9 +423,8 @@
       </div>
 
       <!-- ══ P03 — 3D ══ -->
-      <!-- [FIX 7] loading="lazy" ajouté -->
       <div class="project-card reveal" data-category="3d">
-        <div class="project-bg"><img src="project-03.jpg" alt="3D Exploration — Projet 03" loading="lazy" /></div>
+        <div class="project-bg"><img src="project-03.jpg" alt="3D Exploration — Projet 03" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">3D Exploration — Projet 03</span>
@@ -458,9 +437,8 @@
       </div>
 
       <!-- ══ P04 — Digital ══ -->
-      <!-- [FIX 7] loading="lazy" ajouté -->
       <div class="project-card reveal" data-category="digital">
-        <div class="project-bg"><img src="project-04.jpg" alt="Digital Design — Projet 04" loading="lazy" /></div>
+        <div class="project-bg"><img src="project-04.jpg" alt="Digital Design — Projet 04" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Digital Design — Projet 04</span>
@@ -473,9 +451,8 @@
       </div>
 
       <!-- ══ P05 — Brand ══ -->
-      <!-- [FIX 7] loading="lazy" ajouté -->
       <div class="project-card reveal" data-category="brand">
-        <div class="project-bg"><img src="project-05.jpg" alt="Logotype — Projet 05" loading="lazy" /></div>
+        <div class="project-bg"><img src="project-05.jpg" alt="Logotype — Projet 05" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Logotype — Projet 05</span>
@@ -487,7 +464,7 @@
         </div>
       </div>
 
-      <!-- ══ P06 — Photo (placeholder, pas d'img) ══ -->
+      <!-- ══ P06 — Photo ══ -->
       <div class="project-card reveal" data-category="photo">
         <div class="project-bg"><div class="project-placeholder"><span>Photo à venir</span></div></div>
         <div class="project-overlay"></div>
@@ -506,8 +483,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 02" />
-            <!-- [BUG 2] span mis à jour via applyLang() -->
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -518,12 +494,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v02.title">Motion — Video 02</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v02.title">Motion — Vidéo 02</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v02.title">Video 02</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v02.title">Vidéo 02</p>
         </div>
       </div>
 
@@ -532,7 +508,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 03" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -543,12 +519,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v03.title">Motion — Video 03</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v03.title">Motion — Vidéo 03</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v03.title">Video 03</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v03.title">Vidéo 03</p>
         </div>
       </div>
 
@@ -557,7 +533,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 04" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -568,12 +544,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v04.title">Motion — Video 04</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v04.title">Motion — Vidéo 04</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v04.title">Video 04</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v04.title">Vidéo 04</p>
         </div>
       </div>
 
@@ -582,7 +558,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 05" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -593,12 +569,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v05.title">Motion — Video 05</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v05.title">Motion — Vidéo 05</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v05.title">Video 05</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v05.title">Vidéo 05</p>
         </div>
       </div>
 
@@ -607,7 +583,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 06" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -618,21 +594,21 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v06.title">Motion — Video 06</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v06.title">Motion — Vidéo 06</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v06.title">Video 06</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v06.title">Vidéo 06</p>
         </div>
       </div>
 
-      <!-- ══ V07 — Motion — [FIX 3] wide ajouté pour équilibrer la dernière ligne ══ -->
-      <div class="project-card wide reveal vimeo-card" data-category="motion" data-vimeo-id="1173991444">
+      <!-- ══ V07 — Motion ══ -->
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1173991444">
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 07" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -643,12 +619,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v07.title">Motion — Video 07</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v07.title">Motion — Vidéo 07</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v07.title">Video 07</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v07.title">Vidéo 07</p>
         </div>
       </div>
 
@@ -657,7 +633,7 @@
         <div class="project-bg">
           <div class="vimeo-thumb-wrap">
             <img alt="Vidéo 08" />
-            <div class="vimeo-thumb-loading"><span>Loading…</span></div>
+            <div class="vimeo-thumb-loading"><span>Chargement…</span></div>
           </div>
         </div>
         <div class="play-icon">
@@ -668,12 +644,12 @@
         </div>
         <div class="project-overlay"></div>
         <div class="project-hover">
-          <span class="project-hover-title" data-i18n="v08.title">Motion — Video 08</span>
-          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+          <span class="project-hover-title" data-i18n="v08.title">Motion — Vidéo 08</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Voir la vidéo</button>
         </div>
         <div class="project-info">
-          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Video</span></div>
-          <p class="project-name" data-i18n="v08.title">Video 08</p>
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Vidéo</span></div>
+          <p class="project-name" data-i18n="v08.title">Vidéo 08</p>
         </div>
       </div>
 
@@ -681,8 +657,8 @@
   </section>
 
   <!-- ═══════ VIMEO MODAL -->
-  <div id="vimeoModal" role="dialog" aria-modal="true" aria-label="Video player">
-    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+  <div id="vimeoModal" role="dialog" aria-modal="true" aria-label="Lecteur vidéo">
+    <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
     <div class="modal-inner">
       <iframe
         id="vimeoModalIframe"
@@ -697,7 +673,6 @@
   <div class="cta-band">
     <h2 class="cta-band-title" data-i18n-html="cta.title">Got a project in mind? <em>Let's talk.</em></h2>
     <p class="cta-band-sub" data-i18n="cta.sub">Available for collaborations in branding, motion, 3D and digital design.</p>
-    <!-- [FIX 4] mailto direct (pas d'obfuscation Cloudflare) -->
     <a class="cta-band-btn" href="mailto:tamime.kaddour.b@gmail.com" data-i18n="cta.btn">Get in Touch</a>
   </div>
 
@@ -713,86 +688,72 @@
     ══════════════════════════════════════════════ */
     const T = {
       en: {
-        'nav.back':      'Back to portfolio',
-        'nav.cta':       'Get in Touch',
-        'eyebrow':       'Portfolio',
-        'title.sub':     'Projects',
-        'desc':          'A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.',
-        'f.all':         'All',
-        'f.brand':       'Brand Identity',
-        'f.motion':      'Motion & Video',
-        'f.3d':          '3D',
-        'f.digital':     'Digital',
-        'f.photo':       'Photography',
-        'v.watch':       'Watch on Vimeo',
-        'v.play':        '▶ Watch video',
-        /* [BUG 2] Clé de traduction pour le loading state des thumbnails */
-        'thumb.loading': 'Loading…',
-        'v01.title':     'Motion & Animation — Video 01',
-        'v02.title':     'Motion — Video 02',
-        'v03.title':     'Motion — Video 03',
-        'v04.title':     'Motion — Video 04',
-        'v05.title':     'Motion — Video 05',
-        'v06.title':     'Motion — Video 06',
-        'v07.title':     'Motion — Video 07',
-        'v08.title':     'Motion — Video 08',
-        'cta.title':     'Got a project in mind? <em>Let\'s talk.</em>',
-        'cta.sub':       'Available for collaborations in branding, motion, 3D and digital design.',
-        'cta.btn':       'Get in Touch',
-        'footer':        '© 2026 Tamime Kaddour — All rights reserved',
+        'nav.back':   'Back to portfolio',
+        'eyebrow':    'Portfolio',
+        'title.sub':  'Projects',
+        'desc':       'A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.',
+        'f.all':      'All',
+        'f.brand':    'Brand Identity',
+        'f.motion':   'Motion & Video',
+        'f.3d':       '3D',
+        'f.digital':  'Digital',
+        'f.photo':    'Photography',
+        'v.watch':    'Watch on Vimeo',
+        'v.play':     '▶ Watch video',
+        'v01.title':  'Motion & Animation — Video 01',
+        'v02.title':  'Motion — Video 02',
+        'v03.title':  'Motion — Video 03',
+        'v04.title':  'Motion — Video 04',
+        'v05.title':  'Motion — Video 05',
+        'v06.title':  'Motion — Video 06',
+        'v07.title':  'Motion — Video 07',
+        'v08.title':  'Motion — Video 08',
+        'cta.title':  'Got a project in mind? <em>Let\'s talk.</em>',
+        'cta.sub':    'Available for collaborations in branding, motion, 3D and digital design.',
+        'cta.btn':    'Get in Touch',
+        'footer':     '© 2026 Tamime Kaddour — All rights reserved',
       },
       fr: {
-        'nav.back':      'Retour au portfolio',
-        'nav.cta':       'Me contacter',
-        'eyebrow':       'Portfolio',
-        'title.sub':     'Projets',
-        'desc':          "Une sélection de projets couvrant l'identité visuelle, le motion, la 3D et le design digital — réalisés en agence et en freelance.",
-        'f.all':         'Tout',
-        'f.brand':       'Brand Identity',
-        'f.motion':      'Motion & Vidéo',
-        'f.3d':          '3D',
-        'f.digital':     'Digital',
-        'f.photo':       'Photographie',
-        'v.watch':       'Voir sur Vimeo',
-        'v.play':        '▶ Voir la vidéo',
-        /* [BUG 2] Clé de traduction pour le loading state des thumbnails */
-        'thumb.loading': 'Chargement…',
-        'v01.title':     'Motion & Animation — Vidéo 01',
-        'v02.title':     'Motion — Vidéo 02',
-        'v03.title':     'Motion — Vidéo 03',
-        'v04.title':     'Motion — Vidéo 04',
-        'v05.title':     'Motion — Vidéo 05',
-        'v06.title':     'Motion — Vidéo 06',
-        'v07.title':     'Motion — Vidéo 07',
-        'v08.title':     'Motion — Vidéo 08',
-        'cta.title':     'Un projet en tête ? <em>Parlons-en.</em>',
-        'cta.sub':       'Disponible pour des collaborations en branding, motion, 3D et design digital.',
-        'cta.btn':       'Me contacter',
-        'footer':        '© 2026 Tamime Kaddour — Tous droits réservés',
+        'nav.back':   'Retour au portfolio',
+        'eyebrow':    'Portfolio',
+        'title.sub':  'Projets',
+        'desc':       "Une sélection de projets couvrant l'identité visuelle, le motion, la 3D et le design digital — réalisés en agence et en freelance.",
+        'f.all':      'Tout',
+        'f.brand':    'Brand Identity',
+        'f.motion':   'Motion & Vidéo',
+        'f.3d':       '3D',
+        'f.digital':  'Digital',
+        'f.photo':    'Photographie',
+        'v.watch':    'Voir sur Vimeo',
+        'v.play':     '▶ Voir la vidéo',
+        'v01.title':  'Motion & Animation — Vidéo 01',
+        'v02.title':  'Motion — Vidéo 02',
+        'v03.title':  'Motion — Vidéo 03',
+        'v04.title':  'Motion — Vidéo 04',
+        'v05.title':  'Motion — Vidéo 05',
+        'v06.title':  'Motion — Vidéo 06',
+        'v07.title':  'Motion — Vidéo 07',
+        'v08.title':  'Motion — Vidéo 08',
+        'cta.title':  'Un projet en tête ? <em>Parlons-en.</em>',
+        'cta.sub':    'Disponible pour des collaborations en branding, motion, 3D et design digital.',
+        'cta.btn':    'Me contacter',
+        'footer':     '© 2026 Tamime Kaddour — Tous droits réservés',
       }
     };
 
     let currentLang = localStorage.getItem('lang') || 'en';
 
     function applyLang(lang) {
-      /* Textes simples */
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
         if (T[lang][key] !== undefined) el.textContent = T[lang][key];
       });
-      /* Textes avec HTML (em, etc.) */
       document.querySelectorAll('[data-i18n-html]').forEach(el => {
         const key = el.dataset.i18nHtml;
         if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
       });
-      /* [BUG 1] Seul le texte sans flèche — le ← est géré par .nav-back::before en CSS */
-      document.querySelector('.nav-back').textContent = T[lang]['nav.back'];
-      /* [BUG 2] Mise à jour des spans de loading dans les thumbnails Vimeo */
-      document.querySelectorAll('.vimeo-thumb-loading span').forEach(span => {
-        span.textContent = T[lang]['thumb.loading'];
-      });
-      /* Toggle label */
       document.getElementById('langToggle').textContent = lang === 'en' ? 'FR' : 'EN';
+      document.querySelector('.nav-back').textContent = '← ' + T[lang]['nav.back'];
       document.documentElement.lang = lang;
       localStorage.setItem('lang', lang);
       currentLang = lang;
@@ -808,9 +769,6 @@
        CURSOR
     ══════════════════════════════════════════════ */
     const cursor = document.getElementById('cursor');
-    /* [FIX 5] cursor:none appliqué via JS après initialisation du cursor element */
-    document.body.style.cursor = 'none';
-
     document.addEventListener('mousemove', e => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top  = e.clientY + 'px';
@@ -839,6 +797,18 @@
     });
 
     /* ══════════════════════════════════════════════
+       URL PARAM → AUTO-ACTIVATE FILTER
+       Usage: projects.html?cat=brand
+       Valid values: all, brand, motion, 3d, digital, photo
+    ══════════════════════════════════════════════ */
+    (function() {
+      const param = new URLSearchParams(window.location.search).get('cat');
+      if (!param || param === 'all') return;
+      const target = document.querySelector(`.filter-btn[data-filter="${param}"]`);
+      if (target) target.click();
+    })();
+
+    /* ══════════════════════════════════════════════
        VIMEO THUMBNAILS
        API v2 : vimeo.com/api/v2/video/{id}.json
     ══════════════════════════════════════════════ */
@@ -859,10 +829,7 @@
           });
         })
         .catch(() => {
-          /* thumbnail fetch failed → placeholder stays */
-          if (loadingEl) {
-            loadingEl.querySelector('span').textContent = '▶';
-          }
+          if (loadingEl) loadingEl.querySelector('span').textContent = '▶';
         });
     });
 
@@ -873,61 +840,42 @@
     const modalIframe = document.getElementById('vimeoModalIframe');
     const modalClose  = document.getElementById('modalClose');
 
-    function openModal(id) {
-      modalIframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
+    function openModal(vimeoId) {
+      modalIframe.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0`;
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-
     function closeModal() {
-      modalIframe.src = '';
       modal.classList.remove('open');
+      modalIframe.src = '';
       document.body.style.overflow = '';
     }
 
-    /* Play button click */
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
     document.querySelectorAll('.vimeo-play-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
-        const id = btn.closest('.vimeo-card').dataset.vimeoId;
-        openModal(id);
+        const card = btn.closest('.vimeo-card');
+        openModal(card.dataset.vimeoId);
       });
-    });
-
-    /* Click on the card itself (outside the hover layer buttons) */
-    document.querySelectorAll('.vimeo-card').forEach(card => {
-      card.addEventListener('click', e => {
-        if (!e.target.closest('.project-hover-btn')) {
-          openModal(card.dataset.vimeoId);
-        }
-      });
-    });
-
-    /* Close via button */
-    modalClose.addEventListener('click', closeModal);
-
-    /* Close via backdrop click */
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
-    });
-
-    /* Close via Escape */
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
     });
 
     /* ══════════════════════════════════════════════
        SCROLL REVEAL
     ══════════════════════════════════════════════ */
-    const obs = new IntersectionObserver(entries => {
+    const revealObs = new IntersectionObserver(entries => {
       entries.forEach((e, i) => {
         if (e.isIntersecting) {
           setTimeout(() => e.target.classList.add('visible'), i * 80);
-          obs.unobserve(e.target);
+          revealObs.unobserve(e.target);
         }
       });
     }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
   </script>
 </body>
 </html>
