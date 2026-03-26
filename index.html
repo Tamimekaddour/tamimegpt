@@ -687,6 +687,94 @@
       .contact-pills-band { margin-left: -24px; margin-right: -24px; }
       .contact-pill { flex: 0 0 50%; border-bottom: 1px solid var(--border); }
       .contact-pill:nth-child(even) { border-right: none; }
+      
+      /* ────── BREAKPOINT: TABLET (768px) ────── */
+@media (max-width: 768px) {
+  section { padding: 60px 20px; }
+  #contact { padding: 60px 20px 0; }
+  .marquee-item { padding: 18px 32px; gap: 10px; }
+  .marquee-label { display: none; }
+  .about-body { font-size: 13px; line-height: 1.8; }
+  .services-tagline { max-width: 280px; }
+  .skill-bar-item { grid-template-columns: 140px 1fr 40px; gap: 20px; }
+  .skill-bar-name { font-size: 12px; }
+  .tl-date { font-size: 10px; }
+  .tl-company { font-size: 12px; }
+  .tl-role { font-size: 14px; }
+  .tl-desc { font-size: 12px; }
+  .contact-pills-band { margin-left: -20px; margin-right: -20px; }
+  footer { padding: 24px 20px; }
+}
+
+/* ────── BREAKPOINT: SMALL MOBILE (480px) ────── */
+@media (max-width: 480px) {
+  html { font-size: 14px; }
+  body { cursor: auto; }
+  #cursor { display: none; }
+  nav { padding: 14px 16px; gap: 8px; }
+  .hero-name { font-size: clamp(32px, 11vw, 64px); white-space: normal; }
+  .hero-bottom { padding: 0 24px 32px; }
+  .hero-role { font-size: clamp(8px, 0.8vw, 10px); }
+  .about-heading { font-size: clamp(20px, 5vw, 32px); margin-bottom: 32px; }
+  .about-body { max-width: 100%; margin-bottom: 12px; font-size: 13px; }
+  .about-stats { margin-bottom: 40px; min-width: 100%; }
+  .stat { padding: 20px 24px; }
+  .stat-num { font-size: 32px; margin-bottom: 4px; }
+  .stat-num sup { font-size: 14px; }
+  .stat-label { font-size: 8px; }
+  .about-disciplines { gap: 6px; }
+  .disc-tag { padding: 7px 12px; font-size: 8.5px; }
+  .services-heading { font-size: clamp(22px, 6vw, 40px); margin-bottom: 12px; }
+  .services-tagline { font-size: 12px; max-width: 100%; margin-bottom: 40px; }
+  .service-card { padding: 32px 20px; }
+  .service-title { font-size: clamp(13px, 3vw, 16px); margin-bottom: 12px; }
+  .service-desc { font-size: 11px; line-height: 1.7; }
+  .work-title { font-size: clamp(36px, 9vw, 64px); margin-bottom: 40px; }
+  .project-hover-title { font-size: clamp(12px, 2.5vw, 16px); }
+  .project-info { padding: 20px; }
+  .project-name { font-size: 14px; }
+  .project-meta { font-size: 9px; }
+  .section-title { font-size: clamp(22px, 6vw, 40px); margin-bottom: 16px; }
+  .timeline-intro { font-size: 12px; line-height: 1.8; margin-bottom: 40px; }
+  .tl-date { font-size: 9px; }
+  .tl-company { font-size: 11px; }
+  .tl-role { font-size: 13px; }
+  .tl-desc { font-size: 11px; }
+  .tl-tools { font-size: 9px; }
+  .skills-heading { font-size: clamp(22px, 6vw, 48px); margin-bottom: 40px; }
+  .skills-col { padding: 28px; }
+  .skills-col-title { font-size: 9px; }
+  .s-tag { font-size: 8.5px; padding: 6px 12px; }
+  .skill-bars { max-width: 100%; }
+  .skill-bar-item { grid-template-columns: 100px 1fr 32px; gap: 14px; padding: 14px 0; }
+  .skill-bar-name { font-size: 11px; }
+  .skill-bar-pct { font-size: 9px; }
+  .contact-heading { font-size: clamp(22px, 5vw, 40px); margin-bottom: 20px; }
+  .contact-desc { font-size: 12px; line-height: 1.7; margin-bottom: 28px; max-width: 100%; }
+  .contact-btns { gap: 10px; }
+  .btn-primary, .btn-secondary { padding: 12px 20px; font-size: 9px; }
+  .contact-photo { min-height: 240px; }
+  .contact-pill { flex: 0 0 100%; min-width: 100%; border-bottom: 1px solid var(--border); border-right: none; padding: 16px 16px; }
+  .contact-pill svg { width: 10px; height: 10px; }
+  .contact-pills-band { margin-left: -16px; margin-right: -16px; }
+  .footer-copy { font-size: 8px; }
+  .footer-tag { font-size: 11px; }
+}
+
+/* ────── BREAKPOINT: ULTRA-SMALL (< 360px) ────── */
+@media (max-width: 360px) {
+  nav { padding: 12px 12px; }
+  .hero-name { font-size: clamp(28px, 12vw, 48px); }
+  .hero-bottom { padding: 0 16px 24px; }
+  section { padding: 40px 16px; }
+  #contact { padding: 40px 16px 0; }
+  .about-heading { font-size: 18px; }
+  .stat { padding: 16px 16px; }
+  .stat-num { font-size: 24px; }
+  .service-card { padding: 24px 16px; }
+  .project-card { aspect-ratio: 3/2; }
+  .contact-pill { padding: 14px 12px; font-size: 8px; }
+}
     }
   </style>
 </head>
