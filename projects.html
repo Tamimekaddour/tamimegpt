@@ -681,7 +681,7 @@
   <!-- ═══════ FOOTER -->
   <footer>
     <p class="footer-copy" data-i18n="footer">© 2026 Tamime Kaddour — All rights reserved</p>
-    <p class="footer-tag">Ideas, well-dressed.</p>
+    <p class="footer-tag">Designing with Purpose.</p>
   </footer>
 
   <script>
@@ -904,6 +904,41 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     /* ══════════════════════════════════════════════
+       FILM GRAIN — animated noise overlay
+       Renders at 55% res, ~18fps, overlay blend
+    ══════════════════════════════════════════════ */
+    (function() {
+      const c = document.createElement('canvas');
+      c.style.cssText = [
+        'position:fixed', 'inset:0', 'width:100%', 'height:100%',
+        'pointer-events:none', 'z-index:9997',
+        'opacity:0.055', 'mix-blend-mode:overlay'
+      ].join(';');
+      document.body.appendChild(c);
+      const ctx = c.getContext('2d');
+      let W, H;
+      function resize() {
+        W = c.width  = Math.ceil(window.innerWidth  * 0.55);
+        H = c.height = Math.ceil(window.innerHeight * 0.55);
+      }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      let last = 0;
+      function grain(t) {
+        if (t - last > 55) {
+          last = t;
+          const img = ctx.createImageData(W, H);
+          const buf = new Uint32Array(img.data.buffer);
+          for (let i = 0; i < buf.length; i++) {
+            const v = Math.random() * 255 | 0;
+            buf[i] = (255 << 24) | (v << 16) | (v << 8) | v;
+          }
+          ctx.putImageData(img, 0, 0);
+        }
+        requestAnimationFrame(grain);
+      }
+      requestAnimationFrame(grain);
+      /* ══════════════════════════════════════════════
        FILM GRAIN — animated noise overlay
        Renders at 55% res, ~18fps, overlay blend
     ══════════════════════════════════════════════ */
