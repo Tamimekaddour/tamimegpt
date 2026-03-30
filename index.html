@@ -1552,7 +1552,11 @@
     }, {
       threshold: 0.5,
       rootMargin: '-15% 0px -15% 0px'
-      /* ══════════════════════════════════════
+    });
+
+    tlEntries.forEach(e => tlObs.observe(e));
+
+   /* ══════════════════════════════════════
        FILM GRAIN — animated noise overlay
        Renders at 55% res, ~18fps, overlay blend
     ══════════════════════════════════════ */
@@ -1587,9 +1591,7 @@
         requestAnimationFrame(grain);
       }
       requestAnimationFrame(grain);
-    });
-
-    tlEntries.forEach(e => tlObs.observe(e));
+    })();
 
   </script>
 </body>
