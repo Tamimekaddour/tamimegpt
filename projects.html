@@ -56,6 +56,7 @@
     .nav-logo { display: flex; align-items: center; text-decoration: none; }
     .nav-logo img { height: 46px; width: auto; opacity: .88; transition: opacity .3s; }
     .nav-logo:hover img { opacity: 1; }
+    /* FIX: arrow comes from CSS ::before only — no duplicate arrow from JS */
     .nav-back {
       font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
       letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
@@ -354,6 +355,7 @@
   <!-- ═══════ NAV -->
   <nav>
     <a class="nav-logo" href="index.html"><img src="logo.svg" alt="Tamime Kaddour" /></a>
+    <!-- FIX: text only — CSS ::before adds the ← arrow, no JS-injected duplicate -->
     <a class="nav-back" href="index.html">Back to portfolio</a>
     <div style="display:flex;align-items:center;gap:14px;">
       <button class="lang-toggle" id="langToggle">FR</button>
@@ -370,12 +372,12 @@
     </h1>
     <p class="page-desc" data-i18n="desc">A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.</p>
     <div class="filters">
-      <button class="filter-btn active" data-filter="all"     data-i18n="f.all">All</button>
-      <button class="filter-btn"        data-filter="brand"   data-i18n="f.brand">Brand Identity</button>
-      <button class="filter-btn"        data-filter="motion"  data-i18n="f.motion">Motion & Video</button>
-      <button class="filter-btn"        data-filter="3d"      data-i18n="f.3d">3D</button>
-      <button class="filter-btn"        data-filter="digital" data-i18n="f.digital">Digital</button>
-      <button class="filter-btn"        data-filter="photo"   data-i18n="f.photo">Photography</button>
+      <button class="filter-btn active" data-filter="all"    data-i18n="f.all">All</button>
+      <button class="filter-btn" data-filter="brand"         data-i18n="f.brand">Brand Identity</button>
+      <button class="filter-btn" data-filter="motion"        data-i18n="f.motion">Motion & Video</button>
+      <button class="filter-btn" data-filter="3d"            data-i18n="f.3d">3D</button>
+      <button class="filter-btn" data-filter="digital"       data-i18n="f.digital">Digital</button>
+      <button class="filter-btn" data-filter="photo"         data-i18n="f.photo">Photography</button>
     </div>
   </header>
 
@@ -410,7 +412,7 @@
 
       <!-- ══ P02 — Brand ══ -->
       <div class="project-card reveal" data-category="brand">
-        <div class="project-bg"><img src="project-02.jpg" alt="Brand Identity — Projet 02" /></div>
+        <div class="project-bg"><img src="project-02.jpg" alt="Brand Identity — Projet 02" loading="lazy" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Brand Identity — Projet 02</span>
@@ -424,7 +426,7 @@
 
       <!-- ══ P03 — 3D ══ -->
       <div class="project-card reveal" data-category="3d">
-        <div class="project-bg"><img src="project-03.jpg" alt="3D Exploration — Projet 03" /></div>
+        <div class="project-bg"><img src="project-03.jpg" alt="3D Exploration — Projet 03" loading="lazy" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">3D Exploration — Projet 03</span>
@@ -438,7 +440,7 @@
 
       <!-- ══ P04 — Digital ══ -->
       <div class="project-card reveal" data-category="digital">
-        <div class="project-bg"><img src="project-04.jpg" alt="Digital Design — Projet 04" /></div>
+        <div class="project-bg"><img src="project-04.jpg" alt="Digital Design — Projet 04" loading="lazy" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Digital Design — Projet 04</span>
@@ -452,7 +454,7 @@
 
       <!-- ══ P05 — Brand ══ -->
       <div class="project-card reveal" data-category="brand">
-        <div class="project-bg"><img src="project-05.jpg" alt="Logotype — Projet 05" /></div>
+        <div class="project-bg"><img src="project-05.jpg" alt="Logotype — Projet 05" loading="lazy" /></div>
         <div class="project-overlay"></div>
         <div class="project-hover">
           <span class="project-hover-title">Logotype — Projet 05</span>
@@ -753,7 +755,11 @@
         if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
       });
       document.getElementById('langToggle').textContent = lang === 'en' ? 'FR' : 'EN';
-      document.querySelector('.nav-back').textContent = '← ' + T[lang]['nav.back'];
+      /* FIX: set text only — CSS ::before already adds the ← arrow.
+         Old code was: '← ' + T[lang]['nav.back']  → caused double arrow "← ← Back…"
+      */
+      const navBack = document.querySelector('.nav-back');
+      if (navBack) navBack.textContent = T[lang]['nav.back'];
       document.documentElement.lang = lang;
       localStorage.setItem('lang', lang);
       currentLang = lang;
@@ -768,15 +774,23 @@
     /* ══════════════════════════════════════════════
        CURSOR
     ══════════════════════════════════════════════ */
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top  = e.clientY + 'px';
-    });
-    document.querySelectorAll('a, button, .project-card').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('large'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('large'));
-    });
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (!isTouchDevice) {
+      document.body.style.cursor = 'none';
+      const cursor = document.getElementById('cursor');
+      document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, .project-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('large'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('large'));
+      });
+    } else {
+      document.body.style.cursor = '';
+      const cursor = document.getElementById('cursor');
+      if (cursor) cursor.style.display = 'none';
+    }
 
     /* ══════════════════════════════════════════════
        FILTERS
@@ -797,30 +811,20 @@
     });
 
     /* ══════════════════════════════════════════════
-       URL PARAM → AUTO-ACTIVATE FILTER
-       Usage: projects.html?cat=brand
-       Valid values: all, brand, motion, 3d, digital, photo
-    ══════════════════════════════════════════════ */
-    (function() {
-      const param = new URLSearchParams(window.location.search).get('cat');
-      if (!param || param === 'all') return;
-      const target = document.querySelector(`.filter-btn[data-filter="${param}"]`);
-      if (target) target.click();
-    })();
-
-    /* ══════════════════════════════════════════════
        VIMEO THUMBNAILS
-       API v2 : vimeo.com/api/v2/video/{id}.json
+       FIX: use oEmbed API (public, CORS-enabled)
+       instead of deprecated API v2 which had CORS issues.
+       oEmbed response: { thumbnail_url, title, … }
     ══════════════════════════════════════════════ */
     document.querySelectorAll('.vimeo-card').forEach(card => {
       const id        = card.dataset.vimeoId;
       const img       = card.querySelector('.vimeo-thumb-wrap img');
       const loadingEl = card.querySelector('.vimeo-thumb-loading');
 
-      fetch(`https://vimeo.com/api/v2/video/${id}.json`)
+      fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}&width=640`)
         .then(r => r.json())
         .then(data => {
-          const thumb = data[0].thumbnail_large || data[0].thumbnail_medium;
+          const thumb = data.thumbnail_url;
           if (!thumb) return;
           img.src = thumb;
           img.addEventListener('load', () => {
@@ -829,7 +833,10 @@
           });
         })
         .catch(() => {
-          if (loadingEl) loadingEl.querySelector('span').textContent = '▶';
+          /* thumbnail fetch failed → show a play symbol in the placeholder */
+          if (loadingEl) {
+            loadingEl.querySelector('span').textContent = '▶';
+          }
         });
     });
 
@@ -840,41 +847,98 @@
     const modalIframe = document.getElementById('vimeoModalIframe');
     const modalClose  = document.getElementById('modalClose');
 
-    function openModal(vimeoId) {
-      modalIframe.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0`;
+    function openModal(id) {
+      modalIframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+
     function closeModal() {
-      modal.classList.remove('open');
       modalIframe.src = '';
+      modal.classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
+    /* Play button click */
     document.querySelectorAll('.vimeo-play-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
-        const card = btn.closest('.vimeo-card');
-        openModal(card.dataset.vimeoId);
+        const id = btn.closest('.vimeo-card').dataset.vimeoId;
+        openModal(id);
       });
+    });
+
+    /* Click on the card itself (outside the hover layer buttons) */
+    document.querySelectorAll('.vimeo-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (!e.target.closest('.project-hover-btn')) {
+          openModal(card.dataset.vimeoId);
+        }
+      });
+    });
+
+    /* Close via button */
+    modalClose.addEventListener('click', closeModal);
+
+    /* Close via backdrop click */
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+
+    /* Close via Escape */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
     });
 
     /* ══════════════════════════════════════════════
        SCROLL REVEAL
     ══════════════════════════════════════════════ */
-    const revealObs = new IntersectionObserver(entries => {
+    const obs = new IntersectionObserver(entries => {
       entries.forEach((e, i) => {
         if (e.isIntersecting) {
           setTimeout(() => e.target.classList.add('visible'), i * 80);
-          revealObs.unobserve(e.target);
+          obs.unobserve(e.target);
         }
       });
     }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    /* ══════════════════════════════════════════════
+       FILM GRAIN — animated noise overlay
+       Renders at 55% res, ~18fps, overlay blend
+    ══════════════════════════════════════════════ */
+    (function() {
+      const c = document.createElement('canvas');
+      c.style.cssText = [
+        'position:fixed', 'inset:0', 'width:100%', 'height:100%',
+        'pointer-events:none', 'z-index:9997',
+        'opacity:0.055', 'mix-blend-mode:overlay'
+      ].join(';');
+      document.body.appendChild(c);
+      const ctx = c.getContext('2d');
+      let W, H;
+      function resize() {
+        W = c.width  = Math.ceil(window.innerWidth  * 0.55);
+        H = c.height = Math.ceil(window.innerHeight * 0.55);
+      }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      let last = 0;
+      function grain(t) {
+        if (t - last > 55) {
+          last = t;
+          const img = ctx.createImageData(W, H);
+          const buf = new Uint32Array(img.data.buffer);
+          for (let i = 0; i < buf.length; i++) {
+            const v = Math.random() * 255 | 0;
+            buf[i] = (255 << 24) | (v << 16) | (v << 8) | v;
+          }
+          ctx.putImageData(img, 0, 0);
+        }
+        requestAnimationFrame(grain);
+      }
+      requestAnimationFrame(grain);
+    })();
 
   </script>
 </body>
