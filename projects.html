@@ -13,14 +13,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #28282d;
-      --bg2:         #1f1f23;
-      --green-deep:  #00674f;
-      --green-mid:   #1aa37a;
-      --sand:        #c8a77a;
-      --text:        #f6e6d1;
-      --muted:       rgba(246,230,209,0.42);
-      --border:      rgba(26,163,122,0.18);
+      --bg:         #28282d;
+      --bg2:        #1f1f23;
+      --green-deep: #00674f;
+      --green-mid:  #1aa37a;
+      --sand:       #c8a77a;
+      --text:       #f6e6d1;
+      --muted:      rgba(246,230,209,0.42);
+      --border:     rgba(26,163,122,0.18);
     }
 
     html { scroll-behavior: smooth; }
@@ -120,10 +120,11 @@
       letter-spacing: .16em; text-transform: uppercase;
       color: var(--muted); border: 1px solid rgba(246,230,209,.12);
       padding: 9px 20px; background: none; cursor: none; transition: all .3s;
+      border-radius: 100px;
     }
     .filter-btn:hover, .filter-btn.active {
       color: var(--green-mid); border-color: rgba(26,163,122,.42);
-      background: rgba(26,163,122,.04);
+      background: rgba(26,163,122,.05);
     }
 
     /* ── GRID */
@@ -134,1078 +135,1308 @@
       gap: 2px; background: var(--border);
     }
 
-    /* ── CARDS */
+    /* ── CARDS (OPTIMIZED) */
     .project-card {
       position: relative; overflow: hidden;
       background: var(--bg2); aspect-ratio: 4/3;
       cursor: none;
     }
     .project-card.wide {
-      grid-column: span 2;
-    }
-    .project-card.tall {
-      grid-row: span 2;
+      grid-column: span 2; aspect-ratio: 16/7;
     }
 
-    .project-card img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform .6s cubic-bezier(.25,.46,.45,.94), opacity .4s;
-      display: block;
-    }
-    .project-card:hover img { transform: scale(1.04); }
-
-    /* Vimeo embed */
-    .project-card .vimeo-wrap {
+    .project-bg {
       position: absolute; inset: 0;
-      pointer-events: none; overflow: hidden;
+      /* Zoom plus impactant et fluide */
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .project-card .vimeo-wrap iframe {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 177.78vh; height: 56.25vw;
-      min-width: 100%; min-height: 100%;
-      transform: translate(-50%,-50%);
-      border: none;
-    }
-    /* Thumbnail overlay for lazy Vimeo cards */
-    .project-card .vimeo-thumb {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      transition: opacity .4s;
-    }
-    .project-card:hover .vimeo-thumb { opacity: 0; }
-    .project-card .vimeo-play {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity .3s;
-    }
-    .project-card:hover .vimeo-play { opacity: 0; }
-    .project-card .vimeo-play svg { opacity: .7; }
+    .project-card:not(.wide):hover .project-bg { transform: scale(1.08); }
+    .project-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* Overlay */
-    .card-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(31,31,35,.92) 0%, transparent 55%);
-      opacity: 0; transition: opacity .35s;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 24px;
-    }
-    .project-card:hover .card-overlay { opacity: 1; }
-    .card-tags {
-      display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;
-    }
-    .card-tag {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 8.5px;
-      letter-spacing: .18em; text-transform: uppercase;
-      color: var(--green-mid); border: 1px solid rgba(26,163,122,.35);
-      padding: 4px 10px;
-    }
-    .card-title {
-      font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 13px;
-      letter-spacing: .04em; color: var(--text);
+    /* Vimeo bg iframe */
+    .vimeo-bg-iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; border: none;
     }
 
-    /* Always-visible label */
-    .card-label {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 14px 18px 12px;
-      background: linear-gradient(to top, rgba(31,31,35,.85) 0%, transparent 100%);
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-      transition: opacity .3s;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .project-card:hover .card-label { opacity: 0; }
-
-    /* Gallery badge */
-    .gallery-badge {
-      position: absolute; top: 16px; right: 16px;
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(31,31,35,.78); padding: 6px 12px;
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9px;
-      letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
-      border: 1px solid rgba(246,230,209,.1);
-    }
-
-    /* Placeholder */
     .project-placeholder {
       width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1c3b35 0%, #1a1a1e 60%, #28282d 100%);
       display: flex; align-items: center; justify-content: center;
-      background: var(--bg2);
     }
     .project-placeholder span {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
-      letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+      font-family: 'Lexend', sans-serif; font-size: 8.5px; font-weight: 200;
+      letter-spacing: .28em; text-transform: uppercase;
+      color: rgba(26,163,122,.22); border: 1px solid rgba(26,163,122,.1); padding: 8px 18px;
     }
 
-    /* Hidden by filter */
-    .project-card[data-hidden="true"] {
-      display: none;
+    /* Vimeo thumbnail */
+    .vimeo-thumb-wrap { width: 100%; height: 100%; position: relative; }
+    .vimeo-thumb-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      opacity: 0; transition: opacity .5s ease;
+    }
+    .vimeo-thumb-wrap img.loaded { opacity: 1; }
+    .vimeo-thumb-loading {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1c3b35 0%, #1a1a1e 60%, #28282d 100%);
+      display: flex; align-items: center; justify-content: center; transition: opacity .4s;
+    }
+    .vimeo-thumb-loading.hidden { opacity: 0; pointer-events: none; }
+    .vimeo-thumb-loading span {
+      font-size: 8.5px; font-weight: 200; letter-spacing: .28em;
+      text-transform: uppercase; color: rgba(26,163,122,.3);
+      border: 1px solid rgba(26,163,122,.12); padding: 8px 18px;
     }
 
-    /* ── LIGHTBOX */
-    #lightbox {
-      display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(28,28,32,.96); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+    /* Play icon */
+    .play-icon {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s; pointer-events: none;
+    }
+    .project-card:hover .play-icon { opacity: 1; }
+    .play-icon svg { width: 52px; height: 52px; filter: drop-shadow(0 2px 12px rgba(0,0,0,.6)); }
+
+    /* Gallery hint icon */
+    .gallery-icon {
+      position: absolute; top: 18px; right: 18px; z-index: 3;
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 9px;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: rgba(246,230,209,.6);
+      background: rgba(0,0,0,.45); padding: 6px 12px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      border-radius: 100px;
+    }
+
+    /* Overlay : Assombrit plus fortement au hover pour une meilleure lisibilité */
+    .project-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(18,18,22,.96) 0%, rgba(18,18,22,.2) 50%, transparent 100%);
+      z-index: 2; transition: background .4s ease;
+    }
+    .project-card:hover .project-overlay { background: rgba(0,103,79,.65); }
+
+    /* Hover layer */
+    .project-hover {
+      position: absolute; inset: 0; z-index: 4;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 18px;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .35s ease, transform .35s ease;
+      pointer-events: none;
+    }
+    .project-card:hover .project-hover { opacity: 1; transform: translateY(0); pointer-events: all; }
+    
+    .project-hover-title {
+      font-family: 'Lexend', sans-serif; font-weight: 700;
+      font-size: clamp(14px, 1.5vw, 22px); letter-spacing: .08em;
+      text-transform: uppercase; color: var(--text);
+      text-align: center; padding: 0 24px;
+    }
+    .project-hover-btn {
+      font-family: 'Lexend', sans-serif; font-weight: 500; font-size: 9px;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--text);
+      border: 1px solid rgba(246,230,209,.55); padding: 11px 26px; border-radius: 100px;
+      text-decoration: none; transition: all .25s; background: transparent; cursor: none;
+    }
+    .project-hover-btn:hover { background: var(--text); color: var(--bg); }
+
+    /* Info bottom */
+    .project-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      z-index: 3; padding: 28px; transition: opacity .35s ease;
+    }
+    .project-card:hover .project-info { opacity: 0; }
+    .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    
+    /* Design Pilule pour les tags */
+    .project-tag {
+      font-family: 'Lexend', sans-serif; font-weight: 400; font-size: 8.5px;
+      letter-spacing: .15em; text-transform: uppercase; color: var(--green-mid);
+      border: 1px solid rgba(26,163,122,.3); padding: 5px 12px; border-radius: 100px;
+      background: rgba(26,163,122,.05);
+    }
+    
+    .project-name {
+      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 17px; 
+      color: var(--text); letter-spacing: -0.01em; margin-top: 6px;
+    }
+
+    /* ── VIMEO MODAL */
+    #vimeoModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.92); z-index: 1000;
       align-items: center; justify-content: center;
     }
-    #lightbox.open { display: flex; }
-    #lightbox-inner {
-      position: relative; max-width: 90vw; max-height: 88vh;
+    #vimeoModal.open { display: flex; }
+
+    /* ── IMAGE MODAL */
+    #imageModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.95); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+    #imageModal.open { display: flex; }
+    .img-modal-inner {
+      position: relative;
+      max-width: min(92vw, 1280px);
+      max-height: 90vh;
       display: flex; align-items: center; justify-content: center;
     }
-    #lightbox-img {
-      max-width: 90vw; max-height: 88vh;
+    .img-modal-inner img {
+      max-width: 100%; max-height: 88vh;
       object-fit: contain; display: block;
-      border: 1px solid rgba(26,163,122,.18);
+      border: 1px solid rgba(26,163,122,.15);
+      user-select: none;
     }
-    #lightbox-close {
-      position: absolute; top: -44px; right: 0;
-      background: none; border: none; color: var(--muted);
-      font-family: 'Lexend', sans-serif; font-size: 10px;
-      letter-spacing: .2em; text-transform: uppercase; cursor: none;
-      transition: color .3s;
+    .img-modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(31,31,35,.85); border: 1px solid rgba(246,230,209,.18);
+      color: var(--muted); width: 48px; height: 48px;
+      font-size: 18px; cursor: none; transition: all .2s;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Lexend', sans-serif; flex-shrink: 0; border-radius: 100px;
     }
-    #lightbox-close:hover { color: var(--text); }
-    #lightbox-prev, #lightbox-next {
-      position: fixed; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: var(--muted);
-      font-size: 22px; cursor: none; padding: 24px 28px;
-      transition: color .3s; z-index: 501;
-    }
-    #lightbox-prev { left: 0; }
-    #lightbox-next { right: 0; }
-    #lightbox-prev:hover, #lightbox-next:hover { color: var(--green-mid); }
-    #lightbox-caption {
-      position: absolute; bottom: -38px; left: 0; right: 0;
-      text-align: center;
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+    .img-modal-nav:hover { color: var(--text); border-color: rgba(246,230,209,.5); background: var(--bg2); }
+    .img-modal-nav.hidden { opacity: 0; pointer-events: none; }
+    .img-modal-prev { left: -64px; }
+    .img-modal-next { right: -64px; }
+    .img-modal-counter {
+      position: absolute; bottom: -32px; left: 50%; transform: translateX(-50%);
+      font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 10px;
+      letter-spacing: .22em; color: var(--muted); white-space: nowrap;
     }
 
-    /* Gallery lightbox grid */
-    #gallery-grid {
-      display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(28,28,32,.97); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow-y: auto; padding: 80px 40px;
+    /* Shared modal close */
+    .modal-close {
+      position: absolute; top: 22px; right: 30px;
+      background: none; border: 1px solid rgba(246,230,209,.2);
+      color: var(--muted); font-size: 18px; line-height: 1;
+      padding: 8px 13px; cursor: none; transition: all .2s;
+      font-family: 'Lexend', sans-serif; border-radius: 100px;
     }
-    #gallery-grid.open { display: block; }
-    .gallery-grid-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 32px;
+    .modal-close:hover { color: var(--text); border-color: rgba(246,230,209,.5); }
+    .modal-inner { width: min(90vw, 1280px); aspect-ratio: 16/9; position: relative; }
+    .modal-inner iframe { width: 100%; height: 100%; border: none; }
+
+    /* ── CTA BAND (CONTACT) */
+    .cta-band {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 80px 52px; text-align: center;
     }
-    .gallery-grid-title {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 10px;
-      letter-spacing: .24em; text-transform: uppercase; color: var(--muted);
+    .cta-band-title {
+      font-family: 'Lexend', sans-serif; font-weight: 700;
+      font-size: clamp(24px, 3vw, 44px); color: var(--text); margin-bottom: 12px;
     }
-    #gallery-grid-close {
-      background: none; border: none; color: var(--muted);
-      font-family: 'Lexend', sans-serif; font-size: 10px;
-      letter-spacing: .2em; text-transform: uppercase; cursor: none;
-      transition: color .3s;
+    .cta-band-title em { font-style: normal; font-weight: 200; color: var(--green-mid); }
+    .cta-band-sub {
+      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 13px;
+      color: var(--muted); margin-bottom: 36px;
     }
-    #gallery-grid-close:hover { color: var(--text); }
-    .gallery-thumbs {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 2px; background: var(--border);
+    .cta-band-btn {
+      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 9.5px;
+      letter-spacing: .2em; text-transform: uppercase; color: var(--text);
+      background: var(--green-deep); border: 1px solid var(--green-deep);
+      padding: 15px 36px; text-decoration: none; transition: all .3s; display: inline-block;
+      border-radius: 100px;
     }
-    .gallery-thumb {
-      aspect-ratio: 4/3; overflow: hidden; cursor: none;
-      background: var(--bg2);
-    }
-    .gallery-thumb img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform .5s, opacity .3s;
-    }
-    .gallery-thumb:hover img { transform: scale(1.05); opacity: .85; }
+    .cta-band-btn:hover { background: var(--green-mid); border-color: var(--green-mid); }
 
     /* ── FOOTER */
     footer {
-      padding: 40px 52px;
-      border-top: 1px solid var(--border);
+      padding: 28px 52px; border-top: 1px solid var(--border); background: var(--bg2);
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
     }
-    .footer-copy {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
-    }
-    .footer-back {
-      font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 9.5px;
-      letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
-      text-decoration: none; transition: color .3s;
-    }
-    .footer-back:hover { color: var(--green-mid); }
+    .footer-copy { font-family: 'Lexend', sans-serif; font-weight: 200; font-size: 9.5px; letter-spacing: .16em; color: var(--muted); }
+    .footer-tag  { font-family: 'Lexend', sans-serif; font-weight: 300; font-size: 13px; color: rgba(246,230,209,.2); }
+
+    /* ── REVEAL */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── RESPONSIVE */
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       nav { padding: 18px 24px; }
-      .page-header { padding: 130px 24px 60px; }
-      .projects-section { padding: 40px 0 80px; }
-      .projects-grid { grid-template-columns: repeat(2, 1fr); }
-      .project-card.wide { grid-column: span 2; }
-      footer { padding: 32px 24px; }
-    }
-    @media (max-width: 560px) {
+      .page-header { padding: 120px 24px 60px; }
+      .projects-section { padding: 40px 24px 80px; }
       .projects-grid { grid-template-columns: 1fr; }
-      .project-card.wide { grid-column: span 1; }
-      .project-card.tall { grid-row: span 1; }
+      .project-card.wide { grid-column: span 1; aspect-ratio: 4/3; }
+      footer { flex-direction: column; gap: 12px; padding: 24px; text-align: center; }
+      .cta-band { padding: 60px 24px; }
+      .modal-inner { width: 96vw; }
+      .img-modal-prev { left: -48px; width: 38px; height: 38px; font-size: 14px; }
+      .img-modal-next { right: -48px; width: 38px; height: 38px; font-size: 14px; }
+    }
+    @media (max-width: 600px) {
+      .img-modal-prev { left: 4px; }
+      .img-modal-next { right: 4px; }
     }
   </style>
 </head>
 <body>
 
-<div id="cursor"></div>
+  <div id="cursor"></div>
 
-<!-- NAV -->
-<nav>
-  <a href="index.html" class="nav-logo">
-    <img src="logo.svg" alt="Tamime Kaddour" />
-  </a>
-  <a href="index.html" class="nav-back" data-i18n="nav.back">Back to Portfolio</a>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <button class="lang-toggle" id="langBtn">FR</button>
-    <a href="index.html#contact" class="nav-cta" data-i18n="nav.cta">Contact</a>
+  <nav>
+    <a class="nav-logo" href="index.html"><img src="logo.svg" alt="Tamime Kaddour" /></a>
+    <a class="nav-back" href="index.html" data-i18n="nav.back">Back to portfolio</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="lang-toggle" id="langToggle">FR</button>
+      <a class="nav-cta" href="index.html#contact" data-i18n="nav.cta">Get in Touch</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="page-eyebrow" data-i18n="eyebrow">Portfolio</p>
+    <h1 class="page-title">All <em data-i18n="title.sub">Projects</em></h1>
+    <p class="page-desc" data-i18n="desc">A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.</p>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all"     data-i18n="f.all">All</button>
+      <button class="filter-btn"        data-filter="brand"   data-i18n="f.brand">Brand Identity</button>
+      <button class="filter-btn"        data-filter="motion"  data-i18n="f.motion">Motion &amp; Video</button>
+      <button class="filter-btn"        data-filter="3d"      data-i18n="f.3d">3D</button>
+      <button class="filter-btn"        data-filter="digital" data-i18n="f.digital">Digital</button>
+      <button class="filter-btn"        data-filter="photo"   data-i18n="f.photo">Photography</button>
+      <button class="filter-btn"        data-filter="other"   data-i18n="f.other">Other Stuff</button>
+    </div>
+  </header>
+
+  <section class="projects-section">
+    <div class="projects-grid" id="projectsGrid">
+
+      <div class="project-card wide reveal vimeo-card" data-category="motion" data-vimeo-id="1056586616">
+        <div class="project-bg">
+          <iframe class="vimeo-bg-iframe"
+            src="https://player.vimeo.com/video/1173747074?autoplay=1&muted=1&loop=1&background=1&title=0&byline=0&portrait=0"
+            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v01.title">Motion &amp; Animation — Video 01</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.watch">Watch on Vimeo</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span><span class="project-tag">Animation</span></div>
+          <p class="project-name" data-i18n="v01.title">Motion &amp; Animation — Video 01</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo01-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo01-brand.jpg" alt="Brand — Logo 01" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b01.title">Brand Identity — Logo 01</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b01.title">Brand Identity — Logo 01</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo02-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo02-brand.jpg" alt="Brand — Logo 02" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b02.title">Brand Identity — Logo 02</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b02.title">Brand Identity — Logo 02</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod1-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod1-3d.jpg" alt="3D — Modèle 01" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d01.title">3D Exploration — Model 01</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d01.title">3D — Model 01</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo03-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo03-brand.jpg" alt="Brand — Logo 03" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b03.title">Brand Identity — Logo 03</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b03.title">Brand Identity — Logo 03</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="digital" data-img-src="projects/digital/sto1-digital.jpg">
+        <div class="project-bg"><img src="projects/digital/sto1-digital.jpg" alt="Digital — Campagne 01" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="dig1.title">Digital Design — Campaign 01</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Digital</span><span class="project-tag">Design</span></div>
+          <p class="project-name" data-i18n="dig1.title">Digital Design — Campaign 01</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo04-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo04-brand.jpg" alt="Brand — Logo 04" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b04.title">Brand Identity — Logo 04</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b04.title">Brand Identity — Logo 04</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod2-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod2-3d.jpg" alt="3D — Modèle 02" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d02.title">3D Exploration — Model 02</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d02.title">3D — Model 02</p>
+        </div>
+      </div>
+
+      <div class="project-card wide reveal gallery-card" data-category="photo" data-gallery="photo">
+        <div class="project-bg"><img src="projects/photo/pic10-photos.jpg" alt="Photography Gallery" loading="lazy" /></div>
+        <div class="gallery-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1" width="4.5" height="4.5"/><rect x="6.5" y="1" width="4.5" height="4.5"/><rect x="1" y="6.5" width="4.5" height="4.5"/><rect x="6.5" y="6.5" width="4.5" height="4.5"/></svg>
+          20 photos
+        </div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="photo.title">Photography — Gallery</span>
+          <button class="project-hover-btn" data-i18n="photo.btn">View Gallery (20)</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Photography</span></div>
+          <p class="project-name" data-i18n="photo.title">Photography — Gallery</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo05-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo05-brand.jpg" alt="Brand — Logo 05" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b05.title">Brand Identity — Logo 05</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b05.title">Brand Identity — Logo 05</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod3-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod3-3d.jpg" alt="3D — Modèle 03" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d03.title">3D Exploration — Model 03</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d03.title">3D — Model 03</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo06-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo06-brand.jpg" alt="Brand — Logo 06" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b06.title">Brand Identity — Logo 06</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b06.title">Brand Identity — Logo 06</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1174003908">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 02" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v02.title">Motion — Video 02</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v02.title">Motion — Video 02</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo07-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo07-brand.jpg" alt="Brand — Logo 07" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b07.title">Brand Identity — Logo 07</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b07.title">Brand Identity — Logo 07</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod4-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod4-3d.jpg" alt="3D — Modèle 04" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d04.title">3D Exploration — Model 04</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d04.title">3D — Model 04</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo08-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo08-brand.jpg" alt="Brand — Logo 08" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b08.title">Brand Identity — Logo 08</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b08.title">Brand Identity — Logo 08</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1174008947">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 03" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v03.title">Motion — Video 03</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v03.title">Motion — Video 03</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo09-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo09-brand.jpg" alt="Brand — Logo 09" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b09.title">Brand Identity — Logo 09</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b09.title">Brand Identity — Logo 09</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1173991540">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 04" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v04.title">Motion — Video 04</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v04.title">Motion — Video 04</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item01-other.jpg">
+        <div class="project-bg"><img src="projects/other/item01-other.jpg" alt="Other — Item 01" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o01.title">Other Work — Item 01</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o01.title">Other Work — Item 01</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1174018726">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 05" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v05.title">Motion — Video 05</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v05.title">Motion — Video 05</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item02-other.jpg">
+        <div class="project-bg"><img src="projects/other/item02-other.jpg" alt="Other — Item 02" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o02.title">Other Work — Item 02</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o02.title">Other Work — Item 02</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item03-other.jpg">
+        <div class="project-bg"><img src="projects/other/item03-other.jpg" alt="Other — Item 03" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o03.title">Other Work — Item 03</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o03.title">Other Work — Item 03</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1173991478">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 06" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v06.title">Motion — Video 06</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v06.title">Motion — Video 06</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item04-other.jpg">
+        <div class="project-bg"><img src="projects/other/item04-other.jpg" alt="Other — Item 04" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o04.title">Other Work — Item 04</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o04.title">Other Work — Item 04</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1173991444">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 07" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v07.title">Motion — Video 07</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v07.title">Motion — Video 07</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item05-other.jpg">
+        <div class="project-bg"><img src="projects/other/item05-other.jpg" alt="Other — Item 05" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o05.title">Other Work — Item 05</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o05.title">Other Work — Item 05</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal vimeo-card" data-category="motion" data-vimeo-id="1173991510">
+        <div class="project-bg">
+          <div class="vimeo-thumb-wrap"><img alt="Video 08" /><div class="vimeo-thumb-loading"><span>Loading…</span></div></div>
+        </div>
+        <div class="play-icon"><svg viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="25" stroke="rgba(246,230,209,0.7)" stroke-width="1"/><polygon points="21,17 37,26 21,35" fill="rgba(246,230,209,0.9)"/></svg></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="v08.title">Motion — Video 08</span>
+          <button class="project-hover-btn vimeo-play-btn" data-i18n="v.play">▶ Watch video</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Motion</span></div>
+          <p class="project-name" data-i18n="v08.title">Motion — Video 08</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod5-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod5-3d.jpg" alt="3D — Modèle 05" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d05.title">3D Exploration — Model 05</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d05.title">3D — Model 05</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod6-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod6-3d.jpg" alt="3D — Modèle 06" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d06.title">3D Exploration — Model 06</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d06.title">3D — Model 06</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod7-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod7-3d.jpg" alt="3D — Modèle 07" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d07.title">3D Exploration — Model 07</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d07.title">3D — Model 07</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod8-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod8-3d.jpg" alt="3D — Modèle 08" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d08.title">3D Exploration — Model 08</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d08.title">3D — Model 08</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod9-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod9-3d.jpg" alt="3D — Modèle 09" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d09.title">3D Exploration — Model 09</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d09.title">3D — Model 09</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="3d" data-img-src="projects/3d/mod10-3d.jpg">
+        <div class="project-bg"><img src="projects/3d/mod10-3d.jpg" alt="3D — Modèle 10" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="d10.title">3D Exploration — Model 10</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">3D</span><span class="project-tag">Render</span></div>
+          <p class="project-name" data-i18n="d10.title">3D — Model 10</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo10-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo10-brand.jpg" alt="Brand — Logo 10" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b10.title">Brand Identity — Logo 10</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b10.title">Brand Identity — Logo 10</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo11-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo11-brand.jpg" alt="Brand — Logo 11" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b11.title">Brand Identity — Logo 11</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b11.title">Brand Identity — Logo 11</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo12-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo12-brand.jpg" alt="Brand — Logo 12" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b12.title">Brand Identity — Logo 12</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b12.title">Brand Identity — Logo 12</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo13-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo13-brand.jpg" alt="Brand — Logo 13" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b13.title">Brand Identity — Logo 13</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b13.title">Brand Identity — Logo 13</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo14-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo14-brand.jpg" alt="Brand — Logo 14" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b14.title">Brand Identity — Logo 14</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b14.title">Brand Identity — Logo 14</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo15-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo15-brand.jpg" alt="Brand — Logo 15" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b15.title">Brand Identity — Logo 15</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b15.title">Brand Identity — Logo 15</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="brand" data-img-src="projects/brand/logo16-brand.jpg">
+        <div class="project-bg"><img src="projects/brand/logo16-brand.jpg" alt="Brand — Logo 16" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="b16.title">Brand Identity — Logo 16</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Brand Identity</span></div>
+          <p class="project-name" data-i18n="b16.title">Brand Identity — Logo 16</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="digital" data-img-src="projects/digital/sto3-digital.jpg">
+        <div class="project-bg"><img src="projects/digital/sto3-digital.jpg" alt="Digital — Campagne 03" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="dig3.title">Digital Design — Campaign 03</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Digital</span><span class="project-tag">Design</span></div>
+          <p class="project-name" data-i18n="dig3.title">Digital Design — Campaign 03</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="digital" data-img-src="projects/digital/sto4-digital.jpg">
+        <div class="project-bg"><img src="projects/digital/sto4-digital.jpg" alt="Digital — Campagne 04" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="dig4.title">Digital Design — Campaign 04</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Digital</span><span class="project-tag">Design</span></div>
+          <p class="project-name" data-i18n="dig4.title">Digital Design — Campaign 04</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="digital" data-img-src="projects/digital/sto5-digital.jpg">
+        <div class="project-bg"><img src="projects/digital/sto5-digital.jpg" alt="Digital — Campagne 05" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="dig5.title">Digital Design — Campaign 05</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Digital</span><span class="project-tag">Design</span></div>
+          <p class="project-name" data-i18n="dig5.title">Digital Design — Campaign 05</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="digital" data-img-src="projects/digital/sto6-digital.jpg">
+        <div class="project-bg"><img src="projects/digital/sto6-digital.jpg" alt="Digital — Campagne 06" loading="lazy" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="dig6.title">Digital Design — Campaign 06</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Digital</span><span class="project-tag">Design</span></div>
+          <p class="project-name" data-i18n="dig6.title">Digital Design — Campaign 06</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item06-other.jpg">
+        <div class="project-bg"><img src="projects/other/item06-other.jpg" alt="Other — Item 06" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o06.title">Other Work — Item 06</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o06.title">Other Work — Item 06</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item07-other.jpg">
+        <div class="project-bg"><img src="projects/other/item07-other.jpg" alt="Other — Item 07" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o07.title">Other Work — Item 07</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o07.title">Other Work — Item 07</p>
+        </div>
+      </div>
+
+      <div class="project-card reveal image-card" data-category="other" data-img-src="projects/other/item08-other.jpg">
+        <div class="project-bg"><img src="projects/other/item08-other.jpg" alt="Other — Item 08" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" /></div>
+        <div class="project-overlay"></div>
+        <div class="project-hover">
+          <span class="project-hover-title" data-i18n="o08.title">Other Work — Item 08</span>
+          <button class="project-hover-btn" data-i18n="p.view">View</button>
+        </div>
+        <div class="project-info">
+          <div class="project-tags"><span class="project-tag">Other</span></div>
+          <p class="project-name" data-i18n="o08.title">Other Work — Item 08</p>
+        </div>
+      </div>
+
+    </div></section>
+
+  <div id="vimeoModal" role="dialog" aria-modal="true" aria-label="Video player">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div class="modal-inner">
+      <iframe id="vimeoModalIframe" src=""
+        allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
   </div>
-</nav>
 
-<!-- HEADER -->
-<header class="page-header">
-  <p class="page-eyebrow" data-i18n="projects.eyebrow">Selected Works</p>
-  <h1 class="page-title">
-    Projects
-    <em data-i18n="projects.subtitle">Motion · Brand · 3D · Digital</em>
-  </h1>
-  <p class="page-desc" data-i18n="projects.desc">
-    A curated selection of projects across motion design, brand identity,
-    3D exploration, digital campaigns and photography.
-  </p>
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all" data-i18n="filter.all">All</button>
-    <button class="filter-btn" data-filter="motion" data-i18n="filter.motion">Motion</button>
-    <button class="filter-btn" data-filter="brand" data-i18n="filter.brand">Brand Identity</button>
-    <button class="filter-btn" data-filter="3d" data-i18n="filter.3d">3D</button>
-    <button class="filter-btn" data-filter="digital" data-i18n="filter.digital">Digital</button>
-    <button class="filter-btn" data-filter="photo" data-i18n="filter.photo">Photography</button>
-    <button class="filter-btn" data-filter="other" data-i18n="filter.other">Other</button>
+  <div id="imageModal" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="modal-close" id="imgModalClose" aria-label="Close">✕</button>
+    <div class="img-modal-inner">
+      <button class="img-modal-nav img-modal-prev hidden" id="imgModalPrev" aria-label="Previous">←</button>
+      <img id="imgModalImg" src="" alt="" />
+      <button class="img-modal-nav img-modal-next hidden" id="imgModalNext" aria-label="Next">→</button>
+      <div class="img-modal-counter" id="imgModalCounter"></div>
+    </div>
   </div>
-</header>
 
-<!-- PROJECTS GRID -->
-<section class="projects-section">
-  <div class="projects-grid" id="projectsGrid">
-
-    <!-- ══ ROW 1 ══════════════════════════════════════ -->
-
-    <!-- V01 — Wide — Autoplay Vimeo bg -->
-    <div class="project-card wide" data-category="motion">
-      <div class="vimeo-wrap">
-        <iframe src="https://player.vimeo.com/video/1173747074?autoplay=1&muted=1&loop=1&background=1&title=0&byline=0&portrait=0"
-          allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span><span class="card-tag">Animation</span></div>
-        <p class="card-title" data-i18n="v01.title">Motion &amp; Animation — Video 01</p>
-      </div>
-      <div class="card-label"><span data-i18n="v01.title">Motion &amp; Animation — Video 01</span></div>
-    </div>
-
-    <!-- Brand 01 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo01-brand.jpg">
-      <img src="projects/brand/logo01-brand.jpg" alt="Brand — Logo 01" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b01.title">Brand Identity — Logo 01</p>
-      </div>
-      <div class="card-label"><span data-i18n="b01.title">Brand Identity — Logo 01</span></div>
-    </div>
-
-    <!-- ══ ROW 2 ══════════════════════════════════════ -->
-
-    <!-- Brand 02 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo02-brand.jpg">
-      <img src="projects/brand/logo02-brand.jpg" alt="Brand — Logo 02" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b02.title">Brand Identity — Logo 02</p>
-      </div>
-      <div class="card-label"><span data-i18n="b02.title">Brand Identity — Logo 02</span></div>
-    </div>
-
-    <!-- 3D 01 -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod1-3d.jpg">
-      <img src="projects/3d/mod1-3d.jpg" alt="3D — Modèle 01" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d01.title">3D — Model 01</p>
-      </div>
-      <div class="card-label"><span data-i18n="d01.title">3D Exploration — Model 01</span></div>
-    </div>
-
-    <!-- Brand 03 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo03-brand.jpg">
-      <img src="projects/brand/logo03-brand.jpg" alt="Brand — Logo 03" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b03.title">Brand Identity — Logo 03</p>
-      </div>
-      <div class="card-label"><span data-i18n="b03.title">Brand Identity — Logo 03</span></div>
-    </div>
-
-    <!-- ══ ROW 3 ══════════════════════════════════════ -->
-
-    <!-- Digital 01 -->
-    <div class="project-card" data-category="digital" data-img-src="projects/digital/sto1-digital.jpg">
-      <img src="projects/digital/sto1-digital.jpg" alt="Digital — Campaign 01" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Digital</span><span class="card-tag">Design</span></div>
-        <p class="card-title" data-i18n="dig1.title">Digital Design — Campaign 01</p>
-      </div>
-      <div class="card-label"><span data-i18n="dig1.title">Digital Design — Campaign 01</span></div>
-    </div>
-
-    <!-- Brand 04 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo04-brand.jpg">
-      <img src="projects/brand/logo04-brand.jpg" alt="Brand — Logo 04" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b04.title">Brand Identity — Logo 04</p>
-      </div>
-      <div class="card-label"><span data-i18n="b04.title">Brand Identity — Logo 04</span></div>
-    </div>
-
-    <!-- 3D 02 -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod2-3d.jpg">
-      <img src="projects/3d/mod2-3d.jpg" alt="3D — Modèle 02" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d02.title">3D — Model 02</p>
-      </div>
-      <div class="card-label"><span data-i18n="d02.title">3D Exploration — Model 02</span></div>
-    </div>
-
-    <!-- ══ ROW 4 ══════════════════════════════════════ -->
-
-    <!-- PHOTO GALLERY — wide -->
-    <div class="project-card wide" data-category="photo" data-gallery="photo">
-      <img src="projects/photo/pic10-photos.jpg" alt="Photography Gallery" loading="lazy" />
-      <div class="gallery-badge">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2">
-          <rect x="1" y="1" width="4.5" height="4.5"/><rect x="6.5" y="1" width="4.5" height="4.5"/>
-          <rect x="1" y="6.5" width="4.5" height="4.5"/><rect x="6.5" y="6.5" width="4.5" height="4.5"/>
-        </svg>
-        <span>20 photos</span>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Photography</span></div>
-        <p class="card-title" data-i18n="photo.title">Photography — Gallery</p>
-      </div>
-      <div class="card-label"><span data-i18n="photo.title">Photography — Gallery</span></div>
-    </div>
-
-    <!-- Brand 05 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo05-brand.jpg">
-      <img src="projects/brand/logo05-brand.jpg" alt="Brand — Logo 05" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b05.title">Brand Identity — Logo 05</p>
-      </div>
-      <div class="card-label"><span data-i18n="b05.title">Brand Identity — Logo 05</span></div>
-    </div>
-
-    <!-- ══ ROW 5 ══════════════════════════════════════ -->
-
-    <!-- 3D 03 -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod3-3d.jpg">
-      <img src="projects/3d/mod3-3d.jpg" alt="3D — Modèle 03" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d03.title">3D — Model 03</p>
-      </div>
-      <div class="card-label"><span data-i18n="d03.title">3D Exploration — Model 03</span></div>
-    </div>
-
-    <!-- Brand 06 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo06-brand.jpg">
-      <img src="projects/brand/logo06-brand.jpg" alt="Brand — Logo 06" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b06.title">Brand Identity — Logo 06</p>
-      </div>
-      <div class="card-label"><span data-i18n="b06.title">Brand Identity — Logo 06</span></div>
-    </div>
-
-    <!-- V02 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1174003908">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1174003908.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v02.title">Motion — Video 02</p>
-      </div>
-      <div class="card-label"><span data-i18n="v02.title">Motion — Video 02</span></div>
-    </div>
-
-    <!-- ══ ROW 6 ══════════════════════════════════════ -->
-
-    <!-- Brand 07 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo07-brand.jpg">
-      <img src="projects/brand/logo07-brand.jpg" alt="Brand — Logo 07" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b07.title">Brand Identity — Logo 07</p>
-      </div>
-      <div class="card-label"><span data-i18n="b07.title">Brand Identity — Logo 07</span></div>
-    </div>
-
-    <!-- 3D 04 -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod4-3d.jpg">
-      <img src="projects/3d/mod4-3d.jpg" alt="3D — Modèle 04" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d04.title">3D — Model 04</p>
-      </div>
-      <div class="card-label"><span data-i18n="d04.title">3D Exploration — Model 04</span></div>
-    </div>
-
-    <!-- Brand 08 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo08-brand.jpg">
-      <img src="projects/brand/logo08-brand.jpg" alt="Brand — Logo 08" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b08.title">Brand Identity — Logo 08</p>
-      </div>
-      <div class="card-label"><span data-i18n="b08.title">Brand Identity — Logo 08</span></div>
-    </div>
-
-    <!-- ══ ROW 7 ══════════════════════════════════════ -->
-
-    <!-- V03 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1174008947">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1174008947.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v03.title">Motion — Video 03</p>
-      </div>
-      <div class="card-label"><span data-i18n="v03.title">Motion — Video 03</span></div>
-    </div>
-
-    <!-- Brand 09 -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo09-brand.jpg">
-      <img src="projects/brand/logo09-brand.jpg" alt="Brand — Logo 09" loading="lazy" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b09.title">Brand Identity — Logo 09</p>
-      </div>
-      <div class="card-label"><span data-i18n="b09.title">Brand Identity — Logo 09</span></div>
-    </div>
-
-    <!-- V04 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1173991540">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1173991540.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v04.title">Motion — Video 04</p>
-      </div>
-      <div class="card-label"><span data-i18n="v04.title">Motion — Video 04</span></div>
-    </div>
-
-    <!-- ══ ROW 8 ══════════════════════════════════════ -->
-
-    <!-- Digital 02 (sto3) — NOUVEAU -->
-    <div class="project-card" data-category="digital" data-img-src="projects/digital/sto3-digital.jpg">
-      <img src="projects/digital/sto3-digital.jpg" alt="Digital — Campaign 03" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Digital</span><span class="card-tag">Design</span></div>
-        <p class="card-title" data-i18n="dig3.title">Digital Design — Campaign 03</p>
-      </div>
-      <div class="card-label"><span data-i18n="dig3.title">Digital Design — Campaign 03</span></div>
-    </div>
-
-    <!-- Brand 10 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo10-brand.jpg">
-      <img src="projects/brand/logo10-brand.jpg" alt="Brand — Logo 10" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b10.title">Brand Identity — Logo 10</p>
-      </div>
-      <div class="card-label"><span data-i18n="b10.title">Brand Identity — Logo 10</span></div>
-    </div>
-
-    <!-- 3D 05 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod5-3d.jpg">
-      <img src="projects/3d/mod5-3d.jpg" alt="3D — Modèle 05" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d05.title">3D — Model 05</p>
-      </div>
-      <div class="card-label"><span data-i18n="d05.title">3D Exploration — Model 05</span></div>
-    </div>
-
-    <!-- ══ ROW 9 ══════════════════════════════════════ -->
-
-    <!-- Other 01 -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item01-other.jpg">
-      <img src="projects/other/item01-other.jpg" alt="Other — Item 01" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o01.title">Other Work — Item 01</p>
-      </div>
-      <div class="card-label"><span data-i18n="o01.title">Other Work — Item 01</span></div>
-    </div>
-
-    <!-- V05 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1174018726">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1174018726.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v05.title">Motion — Video 05</p>
-      </div>
-      <div class="card-label"><span data-i18n="v05.title">Motion — Video 05</span></div>
-    </div>
-
-    <!-- Other 02 -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item02-other.jpg">
-      <img src="projects/other/item02-other.jpg" alt="Other — Item 02" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o02.title">Other Work — Item 02</p>
-      </div>
-      <div class="card-label"><span data-i18n="o02.title">Other Work — Item 02</span></div>
-    </div>
-
-    <!-- ══ ROW 10 ══════════════════════════════════════ -->
-
-    <!-- Other 03 -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item03-other.jpg">
-      <img src="projects/other/item03-other.jpg" alt="Other — Item 03" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o03.title">Other Work — Item 03</p>
-      </div>
-      <div class="card-label"><span data-i18n="o03.title">Other Work — Item 03</span></div>
-    </div>
-
-    <!-- V06 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1173991478">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1173991478.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v06.title">Motion — Video 06</p>
-      </div>
-      <div class="card-label"><span data-i18n="v06.title">Motion — Video 06</span></div>
-    </div>
-
-    <!-- Other 04 -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item04-other.jpg">
-      <img src="projects/other/item04-other.jpg" alt="Other — Item 04" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o04.title">Other Work — Item 04</p>
-      </div>
-      <div class="card-label"><span data-i18n="o04.title">Other Work — Item 04</span></div>
-    </div>
-
-    <!-- ══ ROW 11 ══════════════════════════════════════ -->
-
-    <!-- V07 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1173991444">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1173991444.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v07.title">Motion — Video 07</p>
-      </div>
-      <div class="card-label"><span data-i18n="v07.title">Motion — Video 07</span></div>
-    </div>
-
-    <!-- Other 05 -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item05-other.jpg">
-      <img src="projects/other/item05-other.jpg" alt="Other — Item 05" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o05.title">Other Work — Item 05</p>
-      </div>
-      <div class="card-label"><span data-i18n="o05.title">Other Work — Item 05</span></div>
-    </div>
-
-    <!-- V08 -->
-    <div class="project-card" data-category="motion" data-vimeo-id="1173991510">
-      <div class="vimeo-thumb" style="background-image:url('https://vumbnail.com/1173991510.jpg')"></div>
-      <div class="vimeo-play">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="rgba(246,230,209,0.5)" stroke-width="1"/><polygon points="19,16 35,24 19,32" fill="rgba(246,230,209,0.85)"/></svg>
-      </div>
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Motion</span></div>
-        <p class="card-title" data-i18n="v08.title">Motion — Video 08</p>
-      </div>
-      <div class="card-label"><span data-i18n="v08.title">Motion — Video 08</span></div>
-    </div>
-
-    <!-- ══ ROW 12 — NOUVELLES CARTES ══════════════════ -->
-
-    <!-- Brand 11 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo11-brand.jpg">
-      <img src="projects/brand/logo11-brand.jpg" alt="Brand — Logo 11" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b11.title">Brand Identity — Logo 11</p>
-      </div>
-      <div class="card-label"><span data-i18n="b11.title">Brand Identity — Logo 11</span></div>
-    </div>
-
-    <!-- Digital 03 (sto4) — NOUVEAU -->
-    <div class="project-card" data-category="digital" data-img-src="projects/digital/sto4-digital.jpg">
-      <img src="projects/digital/sto4-digital.jpg" alt="Digital — Campaign 04" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Digital</span><span class="card-tag">Design</span></div>
-        <p class="card-title" data-i18n="dig4.title">Digital Design — Campaign 04</p>
-      </div>
-      <div class="card-label"><span data-i18n="dig4.title">Digital Design — Campaign 04</span></div>
-    </div>
-
-    <!-- 3D 06 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod6-3d.jpg">
-      <img src="projects/3d/mod6-3d.jpg" alt="3D — Modèle 06" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d06.title">3D — Model 06</p>
-      </div>
-      <div class="card-label"><span data-i18n="d06.title">3D Exploration — Model 06</span></div>
-    </div>
-
-    <!-- ══ ROW 13 ══════════════════════════════════════ -->
-
-    <!-- Other 06 — NOUVEAU -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item06-other.jpg">
-      <img src="projects/other/item06-other.jpg" alt="Other — Item 06" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o06.title">Other Work — Item 06</p>
-      </div>
-      <div class="card-label"><span data-i18n="o06.title">Other Work — Item 06</span></div>
-    </div>
-
-    <!-- Brand 12 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo12-brand.jpg">
-      <img src="projects/brand/logo12-brand.jpg" alt="Brand — Logo 12" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b12.title">Brand Identity — Logo 12</p>
-      </div>
-      <div class="card-label"><span data-i18n="b12.title">Brand Identity — Logo 12</span></div>
-    </div>
-
-    <!-- 3D 07 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod7-3d.jpg">
-      <img src="projects/3d/mod7-3d.jpg" alt="3D — Modèle 07" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d07.title">3D — Model 07</p>
-      </div>
-      <div class="card-label"><span data-i18n="d07.title">3D Exploration — Model 07</span></div>
-    </div>
-
-    <!-- ══ ROW 14 ══════════════════════════════════════ -->
-
-    <!-- Brand 13 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo13-brand.jpg">
-      <img src="projects/brand/logo13-brand.jpg" alt="Brand — Logo 13" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b13.title">Brand Identity — Logo 13</p>
-      </div>
-      <div class="card-label"><span data-i18n="b13.title">Brand Identity — Logo 13</span></div>
-    </div>
-
-    <!-- Other 07 — NOUVEAU -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item07-other.jpg">
-      <img src="projects/other/item07-other.jpg" alt="Other — Item 07" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o07.title">Other Work — Item 07</p>
-      </div>
-      <div class="card-label"><span data-i18n="o07.title">Other Work — Item 07</span></div>
-    </div>
-
-    <!-- Digital 04 (sto5) — NOUVEAU -->
-    <div class="project-card" data-category="digital" data-img-src="projects/digital/sto5-digital.jpg">
-      <img src="projects/digital/sto5-digital.jpg" alt="Digital — Campaign 05" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Digital</span><span class="card-tag">Design</span></div>
-        <p class="card-title" data-i18n="dig5.title">Digital Design — Campaign 05</p>
-      </div>
-      <div class="card-label"><span data-i18n="dig5.title">Digital Design — Campaign 05</span></div>
-    </div>
-
-    <!-- ══ ROW 15 ══════════════════════════════════════ -->
-
-    <!-- Brand 14 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo14-brand.jpg">
-      <img src="projects/brand/logo14-brand.jpg" alt="Brand — Logo 14" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b14.title">Brand Identity — Logo 14</p>
-      </div>
-      <div class="card-label"><span data-i18n="b14.title">Brand Identity — Logo 14</span></div>
-    </div>
-
-    <!-- 3D 08 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod8-3d.jpg">
-      <img src="projects/3d/mod8-3d.jpg" alt="3D — Modèle 08" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d08.title">3D — Model 08</p>
-      </div>
-      <div class="card-label"><span data-i18n="d08.title">3D Exploration — Model 08</span></div>
-    </div>
-
-    <!-- Other 08 — NOUVEAU -->
-    <div class="project-card" data-category="other" data-img-src="projects/other/item08-other.jpg">
-      <img src="projects/other/item08-other.jpg" alt="Other — Item 08" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Other</span></div>
-        <p class="card-title" data-i18n="o08.title">Other Work — Item 08</p>
-      </div>
-      <div class="card-label"><span data-i18n="o08.title">Other Work — Item 08</span></div>
-    </div>
-
-    <!-- ══ ROW 16 ══════════════════════════════════════ -->
-
-    <!-- Brand 15 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo15-brand.jpg">
-      <img src="projects/brand/logo15-brand.jpg" alt="Brand — Logo 15" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b15.title">Brand Identity — Logo 15</p>
-      </div>
-      <div class="card-label"><span data-i18n="b15.title">Brand Identity — Logo 15</span></div>
-    </div>
-
-    <!-- Digital 05 (sto6) — NOUVEAU -->
-    <div class="project-card" data-category="digital" data-img-src="projects/digital/sto6-digital.jpg">
-      <img src="projects/digital/sto6-digital.jpg" alt="Digital — Campaign 06" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Digital</span><span class="card-tag">Design</span></div>
-        <p class="card-title" data-i18n="dig6.title">Digital Design — Campaign 06</p>
-      </div>
-      <div class="card-label"><span data-i18n="dig6.title">Digital Design — Campaign 06</span></div>
-    </div>
-
-    <!-- 3D 09 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod9-3d.jpg">
-      <img src="projects/3d/mod9-3d.jpg" alt="3D — Modèle 09" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d09.title">3D — Model 09</p>
-      </div>
-      <div class="card-label"><span data-i18n="d09.title">3D Exploration — Model 09</span></div>
-    </div>
-
-    <!-- ══ ROW 17 ══════════════════════════════════════ -->
-
-    <!-- Brand 16 — NOUVEAU -->
-    <div class="project-card" data-category="brand" data-img-src="projects/brand/logo16-brand.jpg">
-      <img src="projects/brand/logo16-brand.jpg" alt="Brand — Logo 16" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">Brand Identity</span></div>
-        <p class="card-title" data-i18n="b16.title">Brand Identity — Logo 16</p>
-      </div>
-      <div class="card-label"><span data-i18n="b16.title">Brand Identity — Logo 16</span></div>
-    </div>
-
-    <!-- 3D 10 — NOUVEAU -->
-    <div class="project-card" data-category="3d" data-img-src="projects/3d/mod10-3d.jpg">
-      <img src="projects/3d/mod10-3d.jpg" alt="3D — Modèle 10" loading="lazy"
-        onerror="this.parentNode.innerHTML='<div class=\'project-placeholder\'><span>Coming soon</span></div>'" />
-      <div class="card-overlay">
-        <div class="card-tags"><span class="card-tag">3D</span><span class="card-tag">Render</span></div>
-        <p class="card-title" data-i18n="d10.title">3D — Model 10</p>
-      </div>
-      <div class="card-label"><span data-i18n="d10.title">3D Exploration — Model 10</span></div>
-    </div>
-
-  </div><!-- /projectsGrid -->
-</section>
-
-<!-- LIGHTBOX (single image) -->
-<div id="lightbox" role="dialog" aria-modal="true">
-  <div id="lightbox-inner">
-    <button id="lightbox-close">Close ✕</button>
-    <img id="lightbox-img" src="" alt="" />
-    <p id="lightbox-caption"></p>
+  <div class="cta-band">
+    <h2 class="cta-band-title" data-i18n-html="cta.title">Got a project in mind? <em>Let's talk.</em></h2>
+    <p class="cta-band-sub" data-i18n="cta.sub">Available for collaborations in branding, motion, 3D and digital design.</p>
+    <a class="cta-band-btn" href="mailto:tamime.kaddour.b@gmail.com" data-i18n="cta.btn">Get in Touch</a>
   </div>
-  <button id="lightbox-prev">&#8592;</button>
-  <button id="lightbox-next">&#8594;</button>
-</div>
 
-<!-- GALLERY GRID (photo) -->
-<div id="gallery-grid" role="dialog" aria-modal="true">
-  <div class="gallery-grid-header">
-    <p class="gallery-grid-title">Photography — Gallery</p>
-    <button id="gallery-grid-close">Close ✕</button>
-  </div>
-  <div class="gallery-thumbs" id="galleryThumbs"></div>
-</div>
+  <footer>
+    <p class="footer-copy" data-i18n="footer">© 2026 Tamime Kaddour — All rights reserved</p>
+    <p class="footer-tag">Designing with Purpose.</p>
+  </footer>
 
-<!-- FOOTER -->
-<footer>
-  <p class="footer-copy">© 2025 Tamime Kaddour — All rights reserved</p>
-  <a href="index.html" class="footer-back">← Back to Portfolio</a>
-</footer>
+  <script>
+    /* ══════════════════════════════════════════
+       TRANSLATIONS
+    ══════════════════════════════════════════ */
+    const T = {
+      en: {
+        'nav.back': 'Back to portfolio', 'nav.cta': 'Get in Touch',
+        'eyebrow': 'Portfolio', 'title.sub': 'Projects',
+        'desc': 'A selection of projects spanning visual identity, motion, 3D and digital design — produced in-house and freelance.',
+        'f.all': 'All', 'f.brand': 'Brand Identity', 'f.motion': 'Motion & Video',
+        'f.3d': '3D', 'f.digital': 'Digital', 'f.photo': 'Photography', 'f.other': 'Other Stuff',
+        'v.watch': 'Watch on Vimeo', 'v.play': '▶ Watch video', 'p.view': 'View',
+        'v01.title': 'Motion & Animation — Video 01',
+        'v02.title': 'Motion — Video 02', 'v03.title': 'Motion — Video 03',
+        'v04.title': 'Motion — Video 04', 'v05.title': 'Motion — Video 05',
+        'v06.title': 'Motion — Video 06', 'v07.title': 'Motion — Video 07',
+        'v08.title': 'Motion — Video 08',
+        'b01.title': 'Brand Identity — Logo 01', 'b02.title': 'Brand Identity — Logo 02',
+        'b03.title': 'Brand Identity — Logo 03', 'b04.title': 'Brand Identity — Logo 04',
+        'b05.title': 'Brand Identity — Logo 05', 'b06.title': 'Brand Identity — Logo 06',
+        'b07.title': 'Brand Identity — Logo 07', 'b08.title': 'Brand Identity — Logo 08',
+        'b09.title': 'Brand Identity — Logo 09', 'b10.title': 'Brand Identity — Logo 10',
+        'b11.title': 'Brand Identity — Logo 11', 'b12.title': 'Brand Identity — Logo 12',
+        'b13.title': 'Brand Identity — Logo 13', 'b14.title': 'Brand Identity — Logo 14',
+        'b15.title': 'Brand Identity — Logo 15', 'b16.title': 'Brand Identity — Logo 16',
+        'd01.title': '3D Exploration — Model 01', 'd02.title': '3D Exploration — Model 02',
+        'd03.title': '3D Exploration — Model 03', 'd04.title': '3D Exploration — Model 04',
+        'd05.title': '3D Exploration — Model 05', 'd06.title': '3D Exploration — Model 06',
+        'd07.title': '3D Exploration — Model 07', 'd08.title': '3D Exploration — Model 08',
+        'd09.title': '3D Exploration — Model 09', 'd10.title': '3D Exploration — Model 10',
+        'dig1.title': 'Digital Design — Campaign 01', 'dig3.title': 'Digital Design — Campaign 03',
+        'dig4.title': 'Digital Design — Campaign 04', 'dig5.title': 'Digital Design — Campaign 05',
+        'dig6.title': 'Digital Design — Campaign 06',
+        'photo.title': 'Photography — Gallery', 'photo.btn': 'View Gallery (20)',
+        'o01.title': 'Other Work — Item 01', 'o02.title': 'Other Work — Item 02',
+        'o03.title': 'Other Work — Item 03', 'o04.title': 'Other Work — Item 04',
+        'o05.title': 'Other Work — Item 05', 'o06.title': 'Other Work — Item 06',
+        'o07.title': 'Other Work — Item 07', 'o08.title': 'Other Work — Item 08',
+        'cta.title': 'Got a project in mind? <em>Let\'s talk.</em>',
+        'cta.sub': 'Available for collaborations in branding, motion, 3D and digital design.',
+        'cta.btn': 'Get in Touch',
+        'footer': '© 2026 Tamime Kaddour — All rights reserved',
+      },
+      fr: {
+        'nav.back': 'Retour au portfolio', 'nav.cta': 'Me contacter',
+        'eyebrow': 'Portfolio', 'title.sub': 'Projets',
+        'desc': "Une sélection de projets couvrant l'identité visuelle, le motion, la 3D et le design digital — réalisés en agence et en freelance.",
+        'f.all': 'Tout', 'f.brand': 'Brand Identity', 'f.motion': 'Motion & Vidéo',
+        'f.3d': '3D', 'f.digital': 'Digital', 'f.photo': 'Photographie', 'f.other': 'Autres',
+        'v.watch': 'Voir sur Vimeo', 'v.play': '▶ Voir la vidéo', 'p.view': 'Voir',
+        'v01.title': 'Motion & Animation — Vidéo 01',
+        'v02.title': 'Motion — Vidéo 02', 'v03.title': 'Motion — Vidéo 03',
+        'v04.title': 'Motion — Vidéo 04', 'v05.title': 'Motion — Vidéo 05',
+        'v06.title': 'Motion — Vidéo 06', 'v07.title': 'Motion — Vidéo 07',
+        'v08.title': 'Motion — Vidéo 08',
+        'b01.title': 'Identité Visuelle — Logo 01', 'b02.title': 'Identité Visuelle — Logo 02',
+        'b03.title': 'Identité Visuelle — Logo 03', 'b04.title': 'Identité Visuelle — Logo 04',
+        'b05.title': 'Identité Visuelle — Logo 05', 'b06.title': 'Identité Visuelle — Logo 06',
+        'b07.title': 'Identité Visuelle — Logo 07', 'b08.title': 'Identité Visuelle — Logo 08',
+        'b09.title': 'Identité Visuelle — Logo 09', 'b10.title': 'Identité Visuelle — Logo 10',
+        'b11.title': 'Identité Visuelle — Logo 11', 'b12.title': 'Identité Visuelle — Logo 12',
+        'b13.title': 'Identité Visuelle — Logo 13', 'b14.title': 'Identité Visuelle — Logo 14',
+        'b15.title': 'Identité Visuelle — Logo 15', 'b16.title': 'Identité Visuelle — Logo 16',
+        'd01.title': '3D — Modèle 01', 'd02.title': '3D — Modèle 02',
+        'd03.title': '3D — Modèle 03', 'd04.title': '3D — Modèle 04',
+        'd05.title': '3D — Modèle 05', 'd06.title': '3D — Modèle 06',
+        'd07.title': '3D — Modèle 07', 'd08.title': '3D — Modèle 08',
+        'd09.title': '3D — Modèle 09', 'd10.title': '3D — Modèle 10',
+        'dig1.title': 'Design Digital — Campagne 01', 'dig3.title': 'Design Digital — Campagne 03',
+        'dig4.title': 'Design Digital — Campagne 04', 'dig5.title': 'Design Digital — Campagne 05',
+        'dig6.title': 'Design Digital — Campagne 06',
+        'photo.title': 'Photographie — Galerie', 'photo.btn': 'Voir la galerie (20)',
+        'o01.title': 'Autres — Item 01', 'o02.title': 'Autres — Item 02',
+        'o03.title': 'Autres — Item 03', 'o04.title': 'Autres — Item 04',
+        'o05.title': 'Autres — Item 05', 'o06.title': 'Autres — Item 06',
+        'o07.title': 'Autres — Item 07', 'o08.title': 'Autres — Item 08',
+        'cta.title': 'Un projet en tête ? <em>Parlons-en.</em>',
+        'cta.sub': 'Disponible pour des collaborations en branding, motion, 3D et design digital.',
+        'cta.btn': 'Me contacter',
+        'footer': '© 2026 Tamime Kaddour — Tous droits réservés',
+      }
+    };
 
-<script>
-  /* ── CURSOR ── */
-  const cur = document.getElementById('cursor');
-  document.addEventListener('mousemove', e => {
-    cur.style.left = e.clientX + 'px';
-    cur.style.top  = e.clientY + 'px';
-  });
-  document.querySelectorAll('a,button,.project-card,.gallery-thumb,.filter-btn').forEach(el => {
-    el.addEventListener('mouseenter', () => cur.classList.add('large'));
-    el.addEventListener('mouseleave', () => cur.classList.remove('large'));
-  });
+    let currentLang = localStorage.getItem('lang') || 'en';
 
-  /* ── LANG i18n ── */
-  const i18n = {
-    en: {
-      'nav.back':'Back to Portfolio','nav.cta':'Contact',
-      'projects.eyebrow':'Selected Works','projects.subtitle':'Motion · Brand · 3D · Digital',
-      'projects.desc':'A curated selection of projects across motion design, brand identity, 3D exploration, digital campaigns and photography.',
-      'filter.all':'All','filter.motion':'Motion','filter.brand':'Brand Identity',
-      'filter.3d':'3D','filter.digital':'Digital','filter.photo':'Photography','filter.other':'Other',
-      'v01.title':'Motion & Animation — Video 01','v02.title':'Motion — Video 02',
-      'v03.title':'Motion — Video 03','v04.title':'Motion — Video 04',
-      'v05.title':'Motion — Video 05','v06.title':'Motion — Video 06',
-      'v07.title':'Motion — Video 07','v08.title':'Motion — Video 08',
-      'b01.title':'Brand Identity — Logo 01','b02.title':'Brand Identity — Logo 02',
-      'b03.title':'Brand Identity — Logo 03','b04.title':'Brand Identity — Logo 04',
-      'b05.title':'Brand Identity — Logo 05','b06.title':'Brand Identity — Logo 06',
-      'b07.title':'Brand Identity — Logo 07','b08.title':'Brand Identity — Logo 08',
-      'b09.title':'Brand Identity — Logo 09','b10.title':'Brand Identity — Logo 10',
-      'b11.title':'Brand Identity — Logo 11','b12.title':'Brand Identity — Logo 12',
-      'b13.title':'Brand Identity — Logo 13','b14.title':'Brand Identity — Logo 14',
-      'b15.title':'Brand Identity — Logo 15','b16.title':'Brand Identity — Logo 16',
-      'd01.title':'3D — Model 01','d02.title':'3D — Model 02','d03.title':'3D — Model 03',
-      'd04.title':'3D — Model 04','d05.title':'3D — Model 05','d06.title':'3D — Model 06',
-      'd07.title':'3D — Model 07','d08.title':'3D — Model 08','d09.title':'3D — Model 09',
-      'd10.title':'3D — Model 10',
-      'dig1.title':'Digital Design — Campaign 01','dig3.title':'Digital Design — Campaign 03',
-      'dig4.title':'Digital Design — Campaign 04','dig5.title':'Digital Design — Campaign 05',
-      'dig6.title':'Digital Design — Campaign 06',
-      'photo.title':'Photography — Gallery',
-      'o01.title':'Other Work — Item 01','o02.title':'Other Work — Item 02',
-      'o03.title':'Other Work — Item 03','o04.title':'Other Work — Item 04',
-      'o05.title':'Other Work — Item 05','o06.title':'Other Work — Item 06',
-      'o07.title':'Other Work — Item 07','o08.title':'Other Work — Item 08',
-    },
-    fr: {
-      'nav.back':'Retour au Portfolio','nav.cta':'Contact',
-      'projects.eyebrow':'Travaux sélectionnés','projects.subtitle':'Motion · Identité · 3D · Digital',
-      'projects.desc':'Une sélection de projets couvrant le motion design, l\'identité de marque, l\'exploration 3D, les campagnes digitales et la photographie.',
-      'filter.all':'Tout','filter.motion':'Motion','filter.brand':'Identité de marque',
-      'filter.3d':'3D','filter.digital':'Digital','filter.photo':'Photographie','filter.other':'Autres',
-      'v01.title':'Motion & Animation — Vidéo 01','v02.title':'Motion — Vidéo 02',
-      'v03.title':'Motion — Vidéo 03','v04.title':'Motion — Vidéo 04',
-      'v05.title':'Motion — Vidéo 05','v06.title':'Motion — Vidéo 06',
-      'v07.title':'Motion — Vidéo 07','v08.title':'Motion — Vidéo 08',
-      'b01.title':'Identité — Logo 01','b02.title':'Identité — Logo 02',
-      'b03.title':'Identité — Logo 03','b04.title':'Identité — Logo 04',
-      'b05.title':'Identité — Logo 05','b06.title':'Identité — Logo 06',
-      'b07.title':'Identité — Logo 07','b08.title':'Identité — Logo 08',
-      'b09.title':'Identité — Logo 09','b10.title':'Identité — Logo 10',
-      'b11.title':'Identité — Logo 11','b12.title':'Identité — Logo 12',
-      'b13.title':'Identité — Logo 13','b14.title':'Identité — Logo 14',
-      'b15.title':'Identité — Logo 15','b16.title':'Identité — Logo 16',
-      'd01.title':'3D — Modèle 01','d02.title':'3D — Modèle 02','d03.title':'3D — Modèle 03',
-      'd04.title':'3D — Modèle 04','d05.title':'3D — Modèle 05','d06.title':'3D — Modèle 06',
-      'd07.title':'3D — Modèle 07','d08.title':'3D — Modèle 08','d09.title':'3D — Modèle 09',
-      'd10.title':'3D — Modèle 10',
-      'dig1.title':'Design Digital — Campagne 01','dig3.title':'Design Digital — Campagne 03',
-      'dig4.title':'Design Digital — Campagne 04','dig5.title':'Design Digital — Campagne 05',
-      'dig6.title':'Design Digital — Campagne 06',
-      'photo.title':'Photographie — Galerie',
-      'o01.title':'Autres — Item 01','o02.title':'Autres — Item 02',
-      'o03.title':'Autres — Item 03','o04.title':'Autres — Item 04',
-      'o05.title':'Autres — Item 05','o06.title':'Autres — Item 06',
-      'o07.title':'Autres — Item 07','o08.title':'Autres — Item 08',
+    function applyLang(lang) {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (T[lang][key] !== undefined) el.textContent = T[lang][key];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+      });
+      document.getElementById('langToggle').textContent = lang === 'en' ? 'FR' : 'EN';
+      const navBack = document.querySelector('.nav-back');
+      if (navBack) navBack.textContent = T[lang]['nav.back'];
+      document.documentElement.lang = lang;
+      localStorage.setItem('lang', lang);
+      currentLang = lang;
     }
-  };
-
-  let lang = localStorage.getItem('lang') || 'en';
-  const langBtn = document.getElementById('langBtn');
-
-  function applyLang(l) {
-    lang = l;
-    langBtn.textContent = l === 'en' ? 'FR' : 'EN';
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const key = el.dataset.i18n;
-      if (i18n[l][key]) el.textContent = i18n[l][key];
+    document.getElementById('langToggle').addEventListener('click', () => {
+      applyLang(currentLang === 'en' ? 'fr' : 'en');
     });
-    localStorage.setItem('lang', l);
-  }
-  langBtn.addEventListener('click', () => applyLang(lang === 'en' ? 'fr' : 'en'));
-  applyLang(lang);
+    applyLang(currentLang);
 
-  /* ── FILTER ── */
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.project-card');
+    /* ══════════════════════════════════════════
+       CURSOR
+    ══════════════════════════════════════════ */
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (!isTouchDevice) {
+      document.body.style.cursor = 'none';
+      const cursor = document.getElementById('cursor');
+      document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, .project-card').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('large'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('large'));
+      });
+    } else {
+      const cursor = document.getElementById('cursor');
+      if (cursor) cursor.style.display = 'none';
+    }
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const f = btn.dataset.filter;
-      cards.forEach(card => {
-        const cat = card.dataset.category;
-        if (f === 'all' || cat === f) {
-          card.removeAttribute('data-hidden');
-          card.style.display = '';
-        } else {
-          card.setAttribute('data-hidden', 'true');
-          card.style.display = 'none';
+    /* ══════════════════════════════════════════
+       FILTERS
+    ══════════════════════════════════════════ */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const allCards   = document.querySelectorAll('.project-card[data-category]');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        allCards.forEach(card => {
+          card.style.display = (f === 'all' || card.dataset.category === f) ? '' : 'none';
+        });
+      });
+    });
+
+    /* ══════════════════════════════════════════
+       VIMEO THUMBNAILS
+    ══════════════════════════════════════════ */
+    document.querySelectorAll('.vimeo-card').forEach(card => {
+      const id        = card.dataset.vimeoId;
+      const img       = card.querySelector('.vimeo-thumb-wrap img');
+      const loadingEl = card.querySelector('.vimeo-thumb-loading');
+      if(!id || !img) return; // Sécurité au cas où on n'a pas mis d'ID
+      
+      fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}&width=640`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.thumbnail_url) return;
+          img.src = data.thumbnail_url;
+          img.addEventListener('load', () => {
+            img.classList.add('loaded');
+            if (loadingEl) loadingEl.classList.add('hidden');
+          });
+        })
+        .catch(() => { if (loadingEl) loadingEl.querySelector('span').textContent = '▶'; });
+    });
+
+    /* ══════════════════════════════════════════
+       VIMEO MODAL
+    ══════════════════════════════════════════ */
+    const vimeoModal  = document.getElementById('vimeoModal');
+    const vimeoIframe = document.getElementById('vimeoModalIframe');
+    const vimeoClose  = document.getElementById('modalClose');
+
+    function openVimeo(id) {
+      if(!id) return;
+      vimeoIframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
+      vimeoModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeVimeo() {
+      vimeoIframe.src = '';
+      vimeoModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.vimeo-play-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        openVimeo(btn.closest('.vimeo-card').dataset.vimeoId);
+      });
+    });
+    document.querySelectorAll('.vimeo-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (!e.target.closest('.project-hover-btn')) openVimeo(card.dataset.vimeoId);
+      });
+    });
+    vimeoClose.addEventListener('click', closeVimeo);
+    vimeoModal.addEventListener('click', e => { if (e.target === vimeoModal) closeVimeo(); });
+
+    /* ══════════════════════════════════════════
+       IMAGE LIGHTBOX
+    ══════════════════════════════════════════ */
+
+    /* Photo gallery — all 20 photos in order */
+    const PHOTO_GALLERY = [
+      'projects/photo/pic2-photos.jpg',  'projects/photo/pic3-photos.jpg',
+      'projects/photo/pic4-photos.jpg',  'projects/photo/pic5-photos.jpg',
+      'projects/photo/pic6-photos.jpg',  'projects/photo/pic7-photos.jpg',
+      'projects/photo/pic8-photos.jpg',  'projects/photo/pic9-photos.jpg',
+      'projects/photo/pic10-photos.jpg', 'projects/photo/pic11-photos.jpg',
+      'projects/photo/pic12-photos.jpg', 'projects/photo/pic13-photos.jpg',
+      'projects/photo/pic14-photos.jpg', 'projects/photo/pic15-photos.jpg',
+      'projects/photo/pic16-photos.jpg', 'projects/photo/pic17-photos.jpg',
+      'projects/photo/pic18-photos.jpg', 'projects/photo/pic19-photos.jpg',
+      'projects/photo/pic20-photos.jpg', 'projects/photo/pic21-photos.jpg',
+    ];
+
+    const imageModal    = document.getElementById('imageModal');
+    const imgModalImg   = document.getElementById('imgModalImg');
+    const imgModalClose = document.getElementById('imgModalClose');
+    const imgModalPrev  = document.getElementById('imgModalPrev');
+    const imgModalNext  = document.getElementById('imgModalNext');
+    const imgModalCount = document.getElementById('imgModalCounter');
+
+    let gallery = [];
+    let galleryIdx = 0;
+
+    function openImageModal(images, startIdx) {
+      gallery = images;
+      galleryIdx = startIdx;
+      refreshImageModal();
+      imageModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function refreshImageModal() {
+      imgModalImg.src = gallery[galleryIdx];
+      const total = gallery.length;
+      imgModalCount.textContent = total > 1 ? `${galleryIdx + 1} / ${total}` : '';
+      imgModalPrev.classList.toggle('hidden', galleryIdx === 0);
+      imgModalNext.classList.toggle('hidden', galleryIdx === total - 1);
+    }
+
+    function closeImageModal() {
+      imgModalImg.src = '';
+      imageModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    imgModalClose.addEventListener('click', closeImageModal);
+    imageModal.addEventListener('click', e => { if (e.target === imageModal) closeImageModal(); });
+    imgModalPrev.addEventListener('click', () => { if (galleryIdx > 0) { galleryIdx--; refreshImageModal(); } });
+    imgModalNext.addEventListener('click', () => { if (galleryIdx < gallery.length - 1) { galleryIdx++; refreshImageModal(); } });
+
+    /* Single image cards */
+    document.querySelectorAll('.image-card').forEach(card => {
+      card.addEventListener('click', e => {
+        if (e.target.closest('.project-hover-btn') || e.target.tagName === 'BUTTON') {
+          e.stopPropagation();
+          openImageModal([card.dataset.imgSrc], 0);
+        }
+      });
+      card.addEventListener('click', e => {
+        if (!e.target.closest('.project-hover-btn')) {
+          openImageModal([card.dataset.imgSrc], 0);
         }
       });
     });
-  });
 
-  /* ── LIGHTBOX ── */
-  const lightbox     = document.getElementById('lightbox');
-  const lbImg        = document.getElementById('lightbox-img');
-  const lbCaption    = document.getElementById('lightbox-caption');
-  const lbClose      = document.getElementById('lightbox-close');
-  const lbPrev       = document.getElementById('lightbox-prev');
-  const lbNext       = document.getElementById('lightbox-next');
-
-  let lbImages = []; // [{src, caption}]
-  let lbIndex  = 0;
-
-  function openLightbox(images, startIndex) {
-    lbImages = images;
-    lbIndex  = startIndex;
-    showLbImage();
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function showLbImage() {
-    const item = lbImages[lbIndex];
-    lbImg.src = item.src;
-    lbImg.alt = item.caption;
-    lbCaption.textContent = item.caption;
-    lbPrev.style.display = lbImages.length > 1 ? '' : 'none';
-    lbNext.style.display = lbImages.length > 1 ? '' : 'none';
-  }
-  lbClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  lbPrev.addEventListener('click', () => { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; showLbImage(); });
-  lbNext.addEventListener('click', () => { lbIndex = (lbIndex + 1) % lbImages.length; showLbImage(); });
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft')  { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; showLbImage(); }
-    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % lbImages.length; showLbImage(); }
-  });
-
-  /* ── GALLERY GRID ── */
-  const galleryGrid      = document.getElementById('gallery-grid');
-  const galleryThumbs    = document.getElementById('galleryThumbs');
-  const galleryGridClose = document.getElementById('gallery-grid-close');
-
-  // Build photo list
-  const photoList = Array.from({length: 20}, (_, i) => {
-    const n = String(i + 1).padStart(2, '0');
-    return { src: `projects/photo/pic${n}-photos.jpg`, caption: `Photography — ${n}` };
-  });
-
-  function openGalleryGrid() {
-    galleryThumbs.innerHTML = '';
-    photoList.forEach((item, idx) => {
-      const div = document.createElement('div');
-      div.className = 'gallery-thumb';
-      div.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
-      div.addEventListener('click', () => {
-        galleryGrid.classList.remove('open');
-        document.body.style.overflow = '';
-        openLightbox(photoList, idx);
+    /* Photo gallery card */
+    document.querySelectorAll('.gallery-card').forEach(card => {
+      card.addEventListener('click', e => {
+        openImageModal(PHOTO_GALLERY, 0);
       });
-      galleryThumbs.appendChild(div);
     });
-    galleryGrid.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  galleryGridClose.addEventListener('click', () => {
-    galleryGrid.classList.remove('open');
-    document.body.style.overflow = '';
-  });
 
-  /* ── CARD CLICK ── */
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      // Gallery
-      if (card.dataset.gallery === 'photo') {
-        openGalleryGrid();
-        return;
-      }
-      // Single image
-      const imgSrc = card.dataset.imgSrc;
-      if (imgSrc) {
-        const caption = card.querySelector('.card-title')?.textContent || '';
-        openLightbox([{src: imgSrc, caption}], 0);
-        return;
-      }
-      // Vimeo — open in new tab
-      const vimeoId = card.dataset.vimeoId;
-      if (vimeoId) {
-        window.open(`https://vimeo.com/${vimeoId}`, '_blank', 'noopener');
-      }
+    /* Keyboard navigation */
+    document.addEventListener('keydown', e => {
+      /* Vimeo modal */
+      if (vimeoModal.classList.contains('open') && e.key === 'Escape') { closeVimeo(); return; }
+      /* Image modal */
+      if (!imageModal.classList.contains('open')) return;
+      if (e.key === 'Escape')      { closeImageModal(); return; }
+      if (e.key === 'ArrowLeft'  && galleryIdx > 0)                  { galleryIdx--; refreshImageModal(); }
+      if (e.key === 'ArrowRight' && galleryIdx < gallery.length - 1) { galleryIdx++; refreshImageModal(); }
     });
-  });
-</script>
+
+    /* Touch swipe on image modal */
+    let touchStartX = 0;
+    imageModal.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    imageModal.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0 && galleryIdx < gallery.length - 1) { galleryIdx++; refreshImageModal(); }
+      if (dx > 0 && galleryIdx > 0)                  { galleryIdx--; refreshImageModal(); }
+    });
+
+    /* ══════════════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════════════ */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    /* ══════════════════════════════════════════
+       FILM GRAIN — OPTIMISÉ POUR LA BATTERIE
+    ══════════════════════════════════════════ */
+    (function() {
+      const c = document.createElement('canvas');
+      c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9997;opacity:0.055;mix-blend-mode:overlay';
+      document.body.appendChild(c);
+      const ctx = c.getContext('2d');
+      let W, H;
+      function resize() { W = c.width = Math.ceil(innerWidth * .55); H = c.height = Math.ceil(innerHeight * .55); }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      let last = 0;
+      (function grain(t) {
+        if (document.hidden) { requestAnimationFrame(grain); return; } // Stoppe le calcul si on change d'onglet
+        if (t - last > 55) {
+          last = t;
+          const img = ctx.createImageData(W, H);
+          const buf = new Uint32Array(img.data.buffer);
+          for (let i = 0; i < buf.length; i++) { const v = Math.random() * 255 | 0; buf[i] = (255 << 24) | (v << 16) | (v << 8) | v; }
+          ctx.putImageData(img, 0, 0);
+        }
+        requestAnimationFrame(grain);
+      })();
+    })();
+  </script>
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const navHeight = document.querySelector('nav')?.offsetHeight || 0;
+        const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 24;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    });
+  </script>
 </body>
 </html>
